@@ -45,6 +45,16 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en-US",
+              "pattern": "([a-z]{2})-([A-Z]{2})",
+              "minLength": 2
+            }
           }
         ],
         "responses": {
@@ -146,6 +156,16 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en-US",
+              "pattern": "([a-z]{2})-([A-Z]{2})",
+              "minLength": 2
+            }
           }
         ],
         "responses": {
@@ -225,6 +245,18 @@
         "summary": "Get Popular",
         "description": "Get a list of the current popular movies on TMDb. This list updates daily.",
         "operationId": "getMoviePopulars",
+        "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en-US",
+              "pattern": "([a-z]{2})-([A-Z]{2})",
+              "minLength": 2
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -302,6 +334,18 @@
         "summary": "Get Popular",
         "description": "Get a list of the current popular TV shows on TMDb. This list updates daily.",
         "operationId": "getTvShowPopulars",
+        "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en-US",
+              "pattern": "([a-z]{2})-([A-Z]{2})",
+              "minLength": 2
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -386,6 +430,16 @@
             "required": true,
             "schema": {
               "type": "integer"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en-US",
+              "pattern": "([a-z]{2})-([A-Z]{2})",
+              "minLength": 2
             }
           }
         ],
@@ -572,6 +626,16 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en-US",
+              "pattern": "([a-z]{2})-([A-Z]{2})",
+              "minLength": 2
+            }
           }
         ],
         "responses": {
@@ -613,11 +677,6 @@
                       "items": {
                         "type": "integer"
                       }
-                    },
-                    "first_air_date": {
-                      "type": "string",
-                      "format": "date",
-                      "nullable": true
                     },
                     "genres": {
                       "type": "array",
@@ -882,6 +941,16 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "en-US",
+              "pattern": "([a-z]{2})-([A-Z]{2})",
+              "minLength": 2
+            }
           }
         ],
         "responses": {
@@ -1102,11 +1171,6 @@
           },
           "overview": {
             "type": "string"
-          },
-          "first_air_date": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
           },
           "origin_country": {
             "type": "array",

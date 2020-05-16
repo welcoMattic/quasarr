@@ -17,10 +17,6 @@ class TvTvIdGetResponse200
      */
     protected $episodeRunTime;
     /**
-     * @var \DateTime|null
-     */
-    protected $firstAirDate;
-    /**
      * @var TvTvIdGetResponse200GenresItem[]
      */
     protected $genres;
@@ -157,18 +153,6 @@ class TvTvIdGetResponse200
     public function setEpisodeRunTime(array $episodeRunTime): self
     {
         $this->episodeRunTime = $episodeRunTime;
-
-        return $this;
-    }
-
-    public function getFirstAirDate(): ?\DateTime
-    {
-        return $this->firstAirDate;
-    }
-
-    public function setFirstAirDate(?\DateTime $firstAirDate): self
-    {
-        $this->firstAirDate = $firstAirDate;
 
         return $this;
     }

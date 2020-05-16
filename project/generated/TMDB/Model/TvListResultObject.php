@@ -29,10 +29,6 @@ class TvListResultObject
      */
     protected $overview;
     /**
-     * @var \DateTime|null
-     */
-    protected $firstAirDate;
-    /**
      * @var string[]
      */
     protected $originCountry;
@@ -125,18 +121,6 @@ class TvListResultObject
     public function setOverview(string $overview): self
     {
         $this->overview = $overview;
-
-        return $this;
-    }
-
-    public function getFirstAirDate(): ?\DateTime
-    {
-        return $this->firstAirDate;
-    }
-
-    public function setFirstAirDate(?\DateTime $firstAirDate): self
-    {
-        $this->firstAirDate = $firstAirDate;
 
         return $this;
     }

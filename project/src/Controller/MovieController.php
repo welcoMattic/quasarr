@@ -31,7 +31,7 @@ class MovieController extends AbstractController
      */
     public function list(TorrentRepository $torrentRepository, MovieRepository $movieRepository): Response
     {
-        $movies = $movieRepository->findBy(['status' => [ResourceStatus::DOWNLOADING, ResourceStatus::MISSING]]);
+        $movies = $movieRepository->findBy(['status' => [ResourceStatus::MISSING, ResourceStatus::DOWNLOADING, ResourceStatus::DOWNLOADED]]);
         $torrents = [];
         $tmdbMovies = [];
 
@@ -49,7 +49,7 @@ class MovieController extends AbstractController
                 }
             }
 
-            $tmdbMovies[$movie->getId()] = $this->tmdbClient->getMovieDetails($movie->getIdTmdb());
+            $tmdbMovies[$movie->getId()] = $this->tmdbClient->getMovieDetails($movie->getIdTmdb(), ['language' => 'fr']);
         }
 
         return $this->render('movies/list.html.twig', [
@@ -64,7 +64,7 @@ class MovieController extends AbstractController
      */
     public function addMovie(int $tmdbId, MovieRepository $movieRepository): Response
     {
-        $tmdbMovie = $this->tmdbClient->getMovieDetails($tmdbId);
+        $tmdbMovie = $this->tmdbClient->getMovieDetails($tmdbId, ['language' => 'fr']);
         if (!$tmdbMovie instanceof MovieMovieIdGetResponse200) {
             throw $this->createNotFoundException(sprintf('Movie #%s not found in TMDB', $tmdbId));
         }

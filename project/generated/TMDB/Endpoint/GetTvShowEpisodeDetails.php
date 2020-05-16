@@ -11,14 +11,19 @@ class GetTvShowEpisodeDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint i
     /**
      * Get the TV episode details by id.
 
-    | **Date** | **Change** |.
-    | June 1, 2018 | Added the [translations](#endpoint:5SFwZar3LkP99QMp7) method. |
+    | **Date** | **Change** |
+     *
+     * @param array $queryParameters {
+     *
+     *     @var string $language
+     * }
      */
-    public function __construct(int $tvId, int $seasonNumber, int $episodeNumber)
+    public function __construct(int $tvId, int $seasonNumber, int $episodeNumber, array $queryParameters = [])
     {
         $this->tv_id = $tvId;
         $this->season_number = $seasonNumber;
         $this->episode_number = $episodeNumber;
+        $this->queryParameters = $queryParameters;
     }
 
     use \Jane\OpenApiRuntime\Client\Psr7EndpointTrait;
@@ -41,6 +46,17 @@ class GetTvShowEpisodeDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint i
     public function getExtraHeaders(): array
     {
         return ['Accept' => ['application/json']];
+    }
+
+    protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
+    {
+        $optionsResolver = parent::getQueryOptionsResolver();
+        $optionsResolver->setDefined(['language']);
+        $optionsResolver->setRequired([]);
+        $optionsResolver->setDefaults(['language' => 'en-US']);
+        $optionsResolver->setAllowedTypes('language', ['string']);
+
+        return $optionsResolver;
     }
 
     /**

@@ -57,7 +57,7 @@ class TvShowController extends AbstractController
                 }
             }
 
-            $_tmdbTvSeasons = $this->tmdbClient->getTvShowDetails($tvSeason->getTvShow()->getIdTmdb())->getSeasons();
+            $_tmdbTvSeasons = $this->tmdbClient->getTvShowDetails($tvSeason->getTvShow()->getIdTmdb(), ['language' => 'fr'])->getSeasons();
 
             foreach ($_tmdbTvSeasons as $tmdbTvSeason) {
                 if ($tmdbTvSeason->getSeasonNumber() === $tvSeason->getNumber()) {
@@ -81,7 +81,12 @@ class TvShowController extends AbstractController
                 }
             }
 
-            $tmdbTvEpisodes[$tvEpisode->getId()] = $this->tmdbClient->getTvShowEpisodeDetails($tvEpisode->getShow()->getIdTmdb(), $tvEpisode->getSeason()->getNumber(), $tvEpisode->getNumber());
+            $tmdbTvEpisodes[$tvEpisode->getId()] = $this->tmdbClient->getTvShowEpisodeDetails(
+                $tvEpisode->getShow()->getIdTmdb(),
+                $tvEpisode->getSeason()->getNumber(),
+                $tvEpisode->getNumber(),
+                ['language' => 'fr']
+            );
         }
 
         return $this->render('tv_shows/list.html.twig', [
@@ -100,7 +105,7 @@ class TvShowController extends AbstractController
         TvShowRepository $tvShowRepository,
         TvSeasonRepository $tvSeasonRepository): Response
     {
-        $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tmdbId);
+        $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tmdbId, ['language' => 'fr']);
         if (!$tmdbTvShow instanceof TvTvIdGetResponse200) {
             throw $this->createNotFoundException(sprintf('TvShow #%s not found in TMDB', $tmdbId));
         }
@@ -137,7 +142,7 @@ class TvShowController extends AbstractController
         $tvShow = $tvShowRepository->findOneBy(['idTmdb' => $tmdbId]);
 
         if (!$tvShow instanceof TvShow) {
-            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tmdbId);
+            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tmdbId, ['language' => 'fr']);
 
             $tvShow = new TvShow();
             $tvShow->setIdTmdb($tmdbTvShow->getId())

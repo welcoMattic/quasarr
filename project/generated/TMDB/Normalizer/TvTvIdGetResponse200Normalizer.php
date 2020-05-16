@@ -55,11 +55,6 @@ class TvTvIdGetResponse200Normalizer implements DenormalizerInterface, Normalize
             }
             $object->setEpisodeRunTime($values_1);
         }
-        if (\array_key_exists('first_air_date', $data) && null !== $data['first_air_date']) {
-            $object->setFirstAirDate(\DateTime::createFromFormat('Y-m-d', $data['first_air_date'])->setTime(0, 0, 0));
-        } elseif (\array_key_exists('first_air_date', $data) && null === $data['first_air_date']) {
-            $object->setFirstAirDate(null);
-        }
         if (\array_key_exists('genres', $data)) {
             $values_2 = [];
             foreach ($data['genres'] as $value_2) {
@@ -178,9 +173,6 @@ class TvTvIdGetResponse200Normalizer implements DenormalizerInterface, Normalize
                 $values_1[] = $value_1;
             }
             $data['episode_run_time'] = $values_1;
-        }
-        if (null !== $object->getFirstAirDate()) {
-            $data['first_air_date'] = $object->getFirstAirDate()->format('Y-m-d');
         }
         if (null !== $object->getGenres()) {
             $values_2 = [];

@@ -4,6 +4,24 @@
 
 {% block body %}
     {{ include('_nav.html.twig', { active: 'movies' }) }}
+    {% set badgeClasses = {
+        downloading: 'light',
+        seeding: 'success',
+        missing: 'danger',
+        paused: 'warning',
+    } %}
+    {% set progressBarClasses = {
+        downloading: 'primary',
+        seeding: 'success',
+        missing: 'danger',
+        paused: 'warning',
+    } %}
+    {% set statusIcons = {
+        downloading: '<i class="gg-arrow-down-o"></i>',
+        seeding: '<i class="gg-check-o"></i>',
+        missing: '<i class="gg-search-loading"></i>',
+        paused: '<i class="gg-play-pause-o"></i>',
+    } %}
 
     <div class="container-xl">
         {{ include('_flash_messages.html.twig') }}
@@ -11,46 +29,51 @@
 
     <div class="container-xl mt-5">
         <h2>🎞 Movies</h2>
-        <div class="row row-cols-1 row-cols-md-12 mt-5 mb-5">
-            {% set badgeClasses = {
-                Downloading: 'primary',
-                Downloaded: 'success',
-                Missing: 'danger',
-                Paused: 'warning',
-            } %}
-            {% for movie in movies %}
+        <div class="row row-cols-1 row-cols-md-4 mt-5 mb-5">
+            {% for movie in movies[:5] %}
                 <div class="col mb-4">
                     <div class="card"
                          data-component="download-progress"
-                         data-status-url="{{ torrents is not empty ? path('torrent_status', { hash: torrents[movie.id].hashString }) }}"
-                         data-resume-url="{{ torrents is not empty ? path('torrent_resume', { hash: torrents[movie.id].hashString }) }}"
-                         data-pause-url="{{ torrents is not empty ? path('torrent_pause', { hash: torrents[movie.id].hashString }) }}"
-                         data-hash="{{ torrents is not empty ? torrents[movie.id].hashString }}"
-                         data-status="{{ torrents is not empty ? torrents[movie.id].statusString : 'Missing' }}">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <img src="https://image.tmdb.org/t/p/w220_and_h330_face{{ tmdbMovies[movie.id].posterPath }}"
-                                     class="d-inline-block"
-                                     alt="{{ movie.title }}"
-                                     width="55"
-                                     height="82">
-                                {{ movie.title }}
-                                {% if movie.id in torrents|keys %}
-                                    <span class="badge badge-{{ badgeClasses[torrents[movie.id].statusString] }} float-right"
-                                          id="title-badge-{{ torrents[movie.id].hashString }}">
-                                        {{ torrents[movie.id].statusString  }}
-                                    </span>
-                                {% else %}
-                                    <span class="badge badge-secondary float-right">
-                                        Missing
-                                    </span>
+                         data-status-url="{{ movie.id in torrents|keys ? path('torrent_status', { hash: torrents[movie.id].hashString }) }}"
+                         data-resume-url="{{ movie.id in torrents|keys ? path('torrent_resume', { hash: torrents[movie.id].hashString }) }}"
+                         data-pause-url="{{ movie.id in torrents|keys ? path('torrent_pause', { hash: torrents[movie.id].hashString }) }}"
+                         data-movie-id="{{ movie.id }}"
+                         data-status="{{ movie.id in torrents|keys ? torrents[movie.id].statusString|lower : 'missing' }}">
+                        <img src="https://image.tmdb.org/t/p/w220_and_h330_face{{ tmdbMovies[movie.id].posterPath }}"
+                             class="card-img-top"
+                             alt="Poster {{ movie.title }}">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0 d-flex">
+                                <div class="flex-grow-1">
+                                   {{ movie.title }}
+                                </div>
+                                {% if tmdbMovies[movie.id].voteAverage > 0 %}
+                                    <div>
+                                        <span class="badge badge-{{ tmdbMovies[movie.id].voteAverage > 7 ? 'success' : 'warning' }} float-right">
+                                            {{ tmdbMovies[movie.id].voteAverage }} / 10
+                                        </span>
+                                    </div>
                                 {% endif %}
                             </h5>
-                            <div class="card-text d-flex">
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                {% if movie.id in torrents|keys %}
+                                    <span class="badge badge-{{ badgeClasses[torrents[movie.id].statusString|lower] }}"
+                                          id="title-badge-{{ movie.id }}"
+                                          title="{{ ('statuses.' ~ torrents[movie.id].statusString|lower)|trans }}">
+                                        {{ statusIcons[torrents[movie.id].statusString|lower]|raw }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-secondary"
+                                          title="{{ 'statuses.missing'|trans }}">
+                                        {{ statusIcons['missing']|raw }}
+                                    </span>
+                                {% endif %}
                                 {% if movie.id in torrents|keys %}
                                     <div class="progress flex-fill align-self-center mr-3">
-                                        <div class="progress-bar bg-{{ badgeClasses[torrents[movie.id].statusString] }}"
-                                             id="progress-{{ torrents[movie.id].hashString }}"
+                                        <div class="progress-bar bg-{{ progressBarClasses[torrents[movie.id].statusString|lower] }}"
+                                             id="progress-{{ movie.id }}"
                                              role="progressbar"
                                              style="width: {{ torrents[movie.id].percentDone(true) }}%"
                                              aria-valuenow="{{ torrents[movie.id].percentDone(true) }}"
@@ -62,12 +85,12 @@
                                     <div class="btn-group btn-group-sm">
                                         <button type="button"
                                                 id="resume-torrent"
-                                                class="btn btn-primary">
+                                                class="btn btn-sm btn-primary">
                                             ▶
                                         </button>
                                         <button type="button"
                                                 id="pause-torrent"
-                                                class="btn btn-warning">
+                                                class="btn btn-sm btn-warning">
                                             ⏸
                                         </button>
                                     </div>

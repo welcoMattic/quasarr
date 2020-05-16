@@ -6,6 +6,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Quasarr\Entity\Torrent;
 use Quasarr\Enum\ResourceStatus;
 use Quasarr\Message\DownloadTvEpisodeMessage;
+use Quasarr\Repository\SettingRepository;
 use Quasarr\Repository\TvEpisodeRepository;
 use Quasarr\Repository\TvSeasonRepository;
 use Quasarr\Repository\TvShowRepository;
@@ -15,12 +16,13 @@ use Transmission\Client as TransmissionClient;
 
 final class DownloadTvEpisodeMessageHandler implements MessageHandlerInterface
 {
-    use BestResultTrait;
+    use TorrentResultsHelperTrait;
 
     private $doctrine;
     private $tvShowRepository;
     private $tvSeasonRepository;
     private $tvEpisodeRepository;
+    private $settingRepository;
     private $transmissionClient;
     private $jackettClient;
 
@@ -28,12 +30,14 @@ final class DownloadTvEpisodeMessageHandler implements MessageHandlerInterface
         TvShowRepository $tvShowRepository,
         TvSeasonRepository $tvSeasonRepository,
         TvEpisodeRepository $tvEpisodeRepository,
+        SettingRepository $settingRepository,
         TransmissionClient $transmissionClient,
         HttpClientInterface $jackettClient)
     {
         $this->tvShowRepository = $tvShowRepository;
         $this->tvSeasonRepository = $tvSeasonRepository;
         $this->tvEpisodeRepository = $tvEpisodeRepository;
+        $this->settingRepository = $settingRepository;
         $this->doctrine = $doctrine;
         $this->transmissionClient = $transmissionClient;
         $this->jackettClient = $jackettClient;
@@ -78,7 +82,7 @@ final class DownloadTvEpisodeMessageHandler implements MessageHandlerInterface
             $results = array_merge($results, json_decode($response->getContent())->Results);
         }
 
-        $bestTorrent = $this->findBestTorrent($results, Torrent::TVEPISODE_TYPE);
+        $bestTorrent = $this->findBestResult($results, Torrent::TVEPISODE_TYPE);
 
         if ($bestTorrent) {
             $transmissionTorrent = $this->transmissionClient->addUrl($bestTorrent->Link)->toArray();

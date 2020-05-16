@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quasarr - Settings{% endblock %}
+
+{% block body %}
+    {{ include('_nav.html.twig', { active: 'search' }) }}
+
+    <div class="container-xl">
+        <div class="mt-5">
+            {{ include('_flash_messages.html.twig') }}
+        </div>
+
+        <h2 class="mt-5">🔧 Settings</h2>
+
+        {{ form_start(form) }}
+            {{ form_row(form.resolutions, {
+                attr: { class: 'form-check-inline' }
+            }) }}
+            {{ form_row(form.qualities, {
+                attr: { class: 'form-check-inline' }
+            }) }}
+            {{ form_row(form.languages, {
+                attr: { class: 'form-check-inline' }
+            }) }}
+            <div class="form-row">
+                <div class="col-6 form-group">
+                    {{ form_errors(form.max_size) }}
+                    {{ form_label(form.max_size) }}
+                    {{ form_widget(form.max_size) }}
+                    {{ form_help(form.max_size) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    Save
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

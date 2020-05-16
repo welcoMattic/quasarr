@@ -8,10 +8,16 @@ class GetMovieDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint implement
 
     /**
      * Get the primary information about a movie.
+     *
+     * @param array $queryParameters {
+     *
+     *     @var string $language
+     * }
      */
-    public function __construct(int $movieId)
+    public function __construct(int $movieId, array $queryParameters = [])
     {
         $this->movie_id = $movieId;
+        $this->queryParameters = $queryParameters;
     }
 
     use \Jane\OpenApiRuntime\Client\Psr7EndpointTrait;
@@ -34,6 +40,17 @@ class GetMovieDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint implement
     public function getExtraHeaders(): array
     {
         return ['Accept' => ['application/json']];
+    }
+
+    protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
+    {
+        $optionsResolver = parent::getQueryOptionsResolver();
+        $optionsResolver->setDefined(['language']);
+        $optionsResolver->setRequired([]);
+        $optionsResolver->setDefaults(['language' => 'en-US']);
+        $optionsResolver->setAllowedTypes('language', ['string']);
+
+        return $optionsResolver;
     }
 
     /**

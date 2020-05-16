@@ -31,11 +31,11 @@ class DashboardController extends AbstractController
                 return $this->redirectToRoute('dashboard');
             }
 
-            $movies = $this->tmdbClient->searchMovie(['query' => $search])->getResults();
-            $tvShows = $this->tmdbClient->searchTvShow(['query' => $search])->getResults();
+            $movies = $this->tmdbClient->searchMovie(['query' => $search, 'language' => 'fr'])->getResults();
+            $tvShows = $this->tmdbClient->searchTvShow(['query' => $search, 'language' => 'fr'])->getResults();
         } else {
-            $movies = $this->tmdbClient->getMoviePopulars()->getResults();
-            $tvShows = $this->tmdbClient->getTvShowPopulars()->getResults();
+            $movies = $this->tmdbClient->getMoviePopulars(['language' => 'fr'])->getResults();
+            $tvShows = $this->tmdbClient->getTvShowPopulars(['language' => 'fr'])->getResults();
         }
 
         $existingMovies = $movieRepository->findBy([
