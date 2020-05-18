@@ -2,6 +2,7 @@
 
 namespace Quasarr\MessageHandler;
 
+use Quasarr\Entity\Setting;
 use Quasarr\Entity\Torrent;
 use Quasarr\Enum\Setting as SettingEnum;
 
