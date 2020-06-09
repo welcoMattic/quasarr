@@ -72,6 +72,15 @@ def cache_clear(c):
 
 
 @task
+def migration(c):
+    """
+    Generate diff migration
+    """
+    with Builder(c):
+        docker_compose_run(c, 'php bin/console make:migration')
+
+
+@task
 def migrate(c):
     """
     Migrate database schema
@@ -87,9 +96,20 @@ def reset_database(c):
     Reset database
     """
     with Builder(c):
-        docker_compose_run(c, 'php bin/console doctrine:database:drop --force --if-not-exists')
+        stop_workers(c)
+        docker_compose_run(c, 'php bin/console doctrine:database:drop --force --if-exists')
         docker_compose_run(c, 'php bin/console doctrine:database:create --if-not-exists')
         docker_compose_run(c, 'php bin/console doctrine:migration:migrate -n')
+        start_workers(c)
+
+
+@task
+def jane_generate(c):
+    """
+    Generate Jane OpenAPI client for TMDB
+    """
+    with Builder(c):
+        docker_compose_run(c, 'php bin/jane-generate', no_deps=True)
 
 
 @task
@@ -102,6 +122,14 @@ def fix_cs(c, dry_run=False):
             docker_compose_run(c, 'vendor/bin/php-cs-fixer fix --config=.php_cs.dist --dry-run --diff')
         else:
             docker_compose_run(c, 'vendor/bin/php-cs-fixer fix --config=.php_cs.dist')
+
+@task
+def watch(c):
+    """
+    Run webpack watcher
+    """
+    with Builder(c):
+        docker_compose_run(c, 'yarn run watch')
 
 
 @task
@@ -193,7 +221,7 @@ def run_in_docker_or_locally_for_dinghy(c, command, no_deps=False):
         docker_compose_run(c, command, no_deps=no_deps)
 
 
-def docker_compose_run(c, command_name, service="builder", user="app", no_deps=False, workdir=None, port_mapping=False):
+def docker_compose_run(c, command_name, service="builder", user="app", no_deps=False, workdir="/home/app/application", port_mapping=False):
     args = [
         'run',
         '--rm',

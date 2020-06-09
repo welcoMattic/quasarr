@@ -1,3 +1,4 @@
 import '../css/app.scss';
 import './dialogs';
-import './download-progress.js';
+import './download-progress';
+import './format-bytes';

@@ -8,6 +8,7 @@ use Quasarr\Entity\TvEpisode;
 use Quasarr\Enum\ResourceStatus;
 use Quasarr\Message\DownloadTvEpisodeMessage;
 use Quasarr\Message\DownloadTvSeasonMessage;
+use Quasarr\Repository\SettingRepository;
 use Quasarr\Repository\TvSeasonRepository;
 use Quasarr\Repository\TvShowRepository;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
@@ -18,11 +19,12 @@ use Transmission\Client as TransmissionClient;
 
 final class DownloadTvSeasonMessageHandler implements MessageHandlerInterface
 {
-    use BestResultTrait;
+    use TorrentResultsHelperTrait;
 
     private $doctrine;
     private $tvShowRepository;
     private $tvSeasonRepository;
+    private $settingRepository;
     private $transmissionClient;
     private $tmdbClient;
     private $jackettClient;
@@ -31,6 +33,7 @@ final class DownloadTvSeasonMessageHandler implements MessageHandlerInterface
     public function __construct(ManagerRegistry $doctrine,
         TvShowRepository $tvShowRepository,
         TvSeasonRepository $tvSeasonRepository,
+        SettingRepository $settingRepository,
         TransmissionClient $transmissionClient,
         Client $tmdbClient,
         HttpClientInterface $jackettClient,
@@ -38,6 +41,7 @@ final class DownloadTvSeasonMessageHandler implements MessageHandlerInterface
     {
         $this->tvShowRepository = $tvShowRepository;
         $this->tvSeasonRepository = $tvSeasonRepository;
+        $this->settingRepository = $settingRepository;
         $this->doctrine = $doctrine;
         $this->transmissionClient = $transmissionClient;
         $this->tmdbClient = $tmdbClient;
@@ -62,7 +66,6 @@ final class DownloadTvSeasonMessageHandler implements MessageHandlerInterface
 
         $responses = [];
         foreach ($queries as $query) {
-            // search for full season, if not found, search episode by episode
             $responses[] = $this->jackettClient->request('GET', 'api/v2.0/indexers/all/results', [
                 'query' => [
                     'Query' => $query,
@@ -73,12 +76,11 @@ final class DownloadTvSeasonMessageHandler implements MessageHandlerInterface
 
         $results = [];
 
-        // handle results of each query, choose the best (implement quality and vostfr ?)
         foreach ($responses as $response) {
             $results = array_merge($results, json_decode($response->getContent())->Results);
         }
 
-        $bestTorrent = $this->findBestTorrent($results, Torrent::TVSEASON_TYPE);
+        $bestTorrent = $this->findBestResult($results, Torrent::TVSEASON_TYPE);
 
         if ($bestTorrent) {
             $transmissionTorrent = $this->transmissionClient->addUrl($bestTorrent->Link)->toArray();
@@ -96,12 +98,17 @@ final class DownloadTvSeasonMessageHandler implements MessageHandlerInterface
         } else {
             // This will avoid to search again full season as we now search by episode.
             $tvSeason->setStatus(ResourceStatus::PROCESSED);
-
-            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tvShow->getIdTmdb());
+            $searchLocaleSetting = $this->settingRepository->findOneBy([
+                    'key' => Setting::SEARCH_LOCALE,
+                ]) ?? 'fr';
+            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tvShow->getIdTmdb(), ['language' => $searchLocaleSetting]);
 
             $tmdbTvSeason = null;
             foreach ($tmdbTvShow->getSeasons() as $season) {
-                $tmdbTvSeason = $season->getSeasonNumber() === $tvSeason->getNumber() ? $season : null;
+                if ($season->getSeasonNumber() === $tvSeason->getNumber()) {
+                    $tmdbTvSeason = $season;
+                    break;
+                }
             }
 
             if ($tmdbTvSeason) {

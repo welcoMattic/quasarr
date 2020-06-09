@@ -12,6 +12,7 @@ class SearchTvShow extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \
      *     @var string $query
      *     @var int $page
      *     @var int $first_air_date_year
+     *     @var string $language
      * }
      */
     public function __construct(array $queryParameters = [])
@@ -44,12 +45,13 @@ class SearchTvShow extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \
     protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
     {
         $optionsResolver = parent::getQueryOptionsResolver();
-        $optionsResolver->setDefined(['query', 'page', 'first_air_date_year']);
+        $optionsResolver->setDefined(['query', 'page', 'first_air_date_year', 'language']);
         $optionsResolver->setRequired(['query']);
-        $optionsResolver->setDefaults([]);
+        $optionsResolver->setDefaults(['language' => 'en-US']);
         $optionsResolver->setAllowedTypes('query', ['string']);
         $optionsResolver->setAllowedTypes('page', ['int']);
         $optionsResolver->setAllowedTypes('first_air_date_year', ['int']);
+        $optionsResolver->setAllowedTypes('language', ['string']);
 
         return $optionsResolver;
     }

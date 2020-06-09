@@ -7,12 +7,12 @@ jobs:
       - name: checkout
         uses: actions/checkout@master
       - name: setup
-        uses: shivammathur/setup-php@2.0.0
+        uses: shivammathur/setup-php@v2
         with:
           php-version: 7.3
           extensions: mbstring, fileinfo, json, intl, dom
-          tools: php-cs-fixer:2.16.3
+          tools: php-cs-fixer:2.16.3, composer:v1
       - name: install
-        run: cd project && composer update --prefer-stable
+        run: cd project && composer install
       - name: 'php-cs-fixer check'
-        run: cd project && vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: cd project && vendor/bin/php-cs-fixer fix --dry-run --diff --config .php_cs.dist

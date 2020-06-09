@@ -58,11 +58,6 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
         if (\array_key_exists('overview', $data)) {
             $object->setOverview($data['overview']);
         }
-        if (\array_key_exists('first_air_date', $data) && null !== $data['first_air_date']) {
-            $object->setFirstAirDate(\DateTime::createFromFormat('Y-m-d', $data['first_air_date'])->setTime(0, 0, 0));
-        } elseif (\array_key_exists('first_air_date', $data) && null === $data['first_air_date']) {
-            $object->setFirstAirDate(null);
-        }
         if (\array_key_exists('origin_country', $data)) {
             $values = [];
             foreach ($data['origin_country'] as $value) {
@@ -109,9 +104,6 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
         }
         if (null !== $object->getOverview()) {
             $data['overview'] = $object->getOverview();
-        }
-        if (null !== $object->getFirstAirDate()) {
-            $data['first_air_date'] = $object->getFirstAirDate()->format('Y-m-d');
         }
         if (null !== $object->getOriginCountry()) {
             $values = [];

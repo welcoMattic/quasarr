@@ -5,8 +5,10 @@ namespace Quasarr\Controller;
 use Quasarr\Entity\Movie;
 use Quasarr\Entity\Torrent;
 use Quasarr\Enum\ResourceStatus;
+use Quasarr\Enum\Setting;
 use Quasarr\Message\DownloadMovieMessage;
 use Quasarr\Repository\MovieRepository;
+use Quasarr\Repository\SettingRepository;
 use Quasarr\Repository\TorrentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,11 +31,14 @@ class MovieController extends AbstractController
     /**
      * @Route("/movies", name="list_movies")
      */
-    public function list(TorrentRepository $torrentRepository, MovieRepository $movieRepository): Response
+    public function list(TorrentRepository $torrentRepository, MovieRepository $movieRepository, SettingRepository $settingRepository): Response
     {
-        $movies = $movieRepository->findBy(['status' => [ResourceStatus::DOWNLOADING, ResourceStatus::MISSING]]);
+        $movies = $movieRepository->findBy(['status' => [ResourceStatus::MISSING, ResourceStatus::DOWNLOADING, ResourceStatus::DOWNLOADED]]);
         $torrents = [];
         $tmdbMovies = [];
+        $searchLocaleSetting = $settingRepository->findOneBy([
+            'key' => Setting::SEARCH_LOCALE,
+        ]) ?? 'fr';
 
         foreach ($movies as $movie) {
             $torrent = $torrentRepository->findOneBy([
@@ -49,7 +54,7 @@ class MovieController extends AbstractController
                 }
             }
 
-            $tmdbMovies[$movie->getId()] = $this->tmdbClient->getMovieDetails($movie->getIdTmdb());
+            $tmdbMovies[$movie->getId()] = $this->tmdbClient->getMovieDetails($movie->getIdTmdb(), ['language' => $searchLocaleSetting]);
         }
 
         return $this->render('movies/list.html.twig', [
@@ -62,9 +67,12 @@ class MovieController extends AbstractController
     /**
      * @Route("/movies/add/{tmdbId}", name="add_movie")
      */
-    public function addMovie(int $tmdbId, MovieRepository $movieRepository): Response
+    public function addMovie(int $tmdbId, MovieRepository $movieRepository, SettingRepository $settingRepository): Response
     {
-        $tmdbMovie = $this->tmdbClient->getMovieDetails($tmdbId);
+        $searchLocaleSetting = $settingRepository->findOneBy([
+                'key' => Setting::SEARCH_LOCALE,
+            ]) ?? 'fr';
+        $tmdbMovie = $this->tmdbClient->getMovieDetails($tmdbId, ['language' => $searchLocaleSetting]);
         if (!$tmdbMovie instanceof MovieMovieIdGetResponse200) {
             throw $this->createNotFoundException(sprintf('Movie #%s not found in TMDB', $tmdbId));
         }

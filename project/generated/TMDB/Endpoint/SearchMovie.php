@@ -13,6 +13,7 @@ class SearchMovie extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \J
      *     @var int $page
      *     @var int $year
      *     @var int $primary_release_year
+     *     @var string $language
      * }
      */
     public function __construct(array $queryParameters = [])
@@ -45,13 +46,14 @@ class SearchMovie extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \J
     protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
     {
         $optionsResolver = parent::getQueryOptionsResolver();
-        $optionsResolver->setDefined(['query', 'page', 'year', 'primary_release_year']);
+        $optionsResolver->setDefined(['query', 'page', 'year', 'primary_release_year', 'language']);
         $optionsResolver->setRequired(['query']);
-        $optionsResolver->setDefaults([]);
+        $optionsResolver->setDefaults(['language' => 'en-US']);
         $optionsResolver->setAllowedTypes('query', ['string']);
         $optionsResolver->setAllowedTypes('page', ['int']);
         $optionsResolver->setAllowedTypes('year', ['int']);
         $optionsResolver->setAllowedTypes('primary_release_year', ['int']);
+        $optionsResolver->setAllowedTypes('language', ['string']);
 
         return $optionsResolver;
     }

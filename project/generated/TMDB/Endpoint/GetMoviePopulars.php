@@ -4,6 +4,19 @@ namespace TMDB\API\Endpoint;
 
 class GetMoviePopulars extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \Jane\OpenApiRuntime\Client\Psr7Endpoint
 {
+    /**
+     * Get a list of the current popular movies on TMDb. This list updates daily.
+     *
+     * @param array $queryParameters {
+     *
+     *     @var string $language
+     * }
+     */
+    public function __construct(array $queryParameters = [])
+    {
+        $this->queryParameters = $queryParameters;
+    }
+
     use \Jane\OpenApiRuntime\Client\Psr7EndpointTrait;
 
     public function getMethod(): string
@@ -24,6 +37,17 @@ class GetMoviePopulars extends \Jane\OpenApiRuntime\Client\BaseEndpoint implemen
     public function getExtraHeaders(): array
     {
         return ['Accept' => ['application/json']];
+    }
+
+    protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
+    {
+        $optionsResolver = parent::getQueryOptionsResolver();
+        $optionsResolver->setDefined(['language']);
+        $optionsResolver->setRequired([]);
+        $optionsResolver->setDefaults(['language' => 'en-US']);
+        $optionsResolver->setAllowedTypes('language', ['string']);
+
+        return $optionsResolver;
     }
 
     /**

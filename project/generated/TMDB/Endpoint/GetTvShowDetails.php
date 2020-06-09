@@ -10,11 +10,16 @@ class GetTvShowDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint implemen
      * Get the primary TV show details by id.
 
     | **Date** | **Change** |.
-    | March 8, 2018 | The `seasons` field now returns the translated names and overviews. |
+     *
+     * @param array $queryParameters {
+     *
+     *     @var string $language
+     * }
      */
-    public function __construct(int $tvId)
+    public function __construct(int $tvId, array $queryParameters = [])
     {
         $this->tv_id = $tvId;
+        $this->queryParameters = $queryParameters;
     }
 
     use \Jane\OpenApiRuntime\Client\Psr7EndpointTrait;
@@ -37,6 +42,17 @@ class GetTvShowDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint implemen
     public function getExtraHeaders(): array
     {
         return ['Accept' => ['application/json']];
+    }
+
+    protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
+    {
+        $optionsResolver = parent::getQueryOptionsResolver();
+        $optionsResolver->setDefined(['language']);
+        $optionsResolver->setRequired([]);
+        $optionsResolver->setDefaults(['language' => 'en-US']);
+        $optionsResolver->setAllowedTypes('language', ['string']);
+
+        return $optionsResolver;
     }
 
     /**
