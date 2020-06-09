@@ -9,7 +9,7 @@ class GetTvShowDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint implemen
     /**
      * Get the primary TV show details by id.
 
-    | **Date** | **Change** |
+    | **Date** | **Change** |.
      *
      * @param array $queryParameters {
      *

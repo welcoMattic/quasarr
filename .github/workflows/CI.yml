@@ -15,4 +15,4 @@ jobs:
       - name: install
         run: cd project && composer install
       - name: 'php-cs-fixer check'
-        run: cd project && vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: cd project && vendor/bin/php-cs-fixer fix --dry-run --diff --config .php_cs.dist

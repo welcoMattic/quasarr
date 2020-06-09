@@ -11,7 +11,7 @@ class GetTvShowEpisodeDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint i
     /**
      * Get the TV episode details by id.
 
-    | **Date** | **Change** |
+    | **Date** | **Change** |.
      *
      * @param array $queryParameters {
      *

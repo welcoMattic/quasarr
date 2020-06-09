@@ -20,6 +20,10 @@ class SettingController extends AbstractController
         $currentSettings = [];
         foreach ($settingRepository->getAllAsArray() as $setting) {
             $currentSettings[$setting['key']] = false !== strpos($setting['value'], ',') ? explode(',', $setting['value']) : $setting['value'];
+
+            if (\is_string($currentSettings[$setting['key']])) {
+                $currentSettings[$setting['key']] = false !== strpos($currentSettings[$setting['key']], '|') ? explode('|', $currentSettings[$setting['key']]) : $currentSettings[$setting['key']];
+            }
         }
 
         $form = $this->createForm(SettingsType::class, $currentSettings);
@@ -33,10 +37,10 @@ class SettingController extends AbstractController
                     $setting->setKey($key);
                     if (\is_array($value)) {
                         $setting->setValue(implode(',', $value));
-                    }
-
-                    if (\is_numeric($value)) {
+                    } elseif (\is_numeric($value)) {
                         $setting->setValue((int) $value);
+                    } else {
+                        $setting->setValue($value);
                     }
 
                     $this->getDoctrine()->getManager()->persist($setting);

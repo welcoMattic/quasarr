@@ -60,7 +60,7 @@ services:
             - "traefik.http.routers.${PROJECT_NAME}-redis.tls=true"
 
     jackett:
-        image: linuxserver/jackett:development
+        image: linuxserver/jackett:latest
         restart: unless-stopped
         volumes:
             - ./jackett/config:/config

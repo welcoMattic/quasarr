@@ -98,8 +98,10 @@ final class DownloadTvSeasonMessageHandler implements MessageHandlerInterface
         } else {
             // This will avoid to search again full season as we now search by episode.
             $tvSeason->setStatus(ResourceStatus::PROCESSED);
-
-            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tvShow->getIdTmdb(), ['language' => 'fr']);
+            $searchLocaleSetting = $this->settingRepository->findOneBy([
+                    'key' => Setting::SEARCH_LOCALE,
+                ]) ?? 'fr';
+            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tvShow->getIdTmdb(), ['language' => $searchLocaleSetting]);
 
             $tmdbTvSeason = null;
             foreach ($tmdbTvShow->getSeasons() as $season) {

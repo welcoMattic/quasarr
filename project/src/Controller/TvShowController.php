@@ -7,6 +7,7 @@ use Quasarr\Entity\TvSeason;
 use Quasarr\Entity\TvShow;
 use Quasarr\Enum\ResourceStatus;
 use Quasarr\Message\DownloadTvSeasonMessage;
+use Quasarr\Repository\SettingRepository;
 use Quasarr\Repository\TorrentRepository;
 use Quasarr\Repository\TvEpisodeRepository;
 use Quasarr\Repository\TvSeasonRepository;
@@ -35,13 +36,17 @@ class TvShowController extends AbstractController
      */
     public function list(TorrentRepository $torrentRepository,
         TvSeasonRepository $tvSeasonRepository,
-        TvEpisodeRepository $tvEpisodeRepository): Response
+        TvEpisodeRepository $tvEpisodeRepository,
+        SettingRepository $settingRepository): Response
     {
         $tvSeasons = $tvSeasonRepository->findBy(['status' => [ResourceStatus::DOWNLOADING, ResourceStatus::MISSING]]);
         $tvEpisodes = $tvEpisodeRepository->findBy(['status' => [ResourceStatus::DOWNLOADING, ResourceStatus::MISSING]]);
         $torrents = [];
         $tmdbTvSeasons = [];
         $tmdbTvEpisodes = [];
+        $searchLocaleSetting = $settingRepository->findOneBy([
+                'key' => Setting::SEARCH_LOCALE,
+            ]) ?? 'fr';
 
         foreach ($tvSeasons as $tvSeason) {
             $torrent = $torrentRepository->findOneBy([
@@ -57,7 +62,7 @@ class TvShowController extends AbstractController
                 }
             }
 
-            $_tmdbTvSeasons = $this->tmdbClient->getTvShowDetails($tvSeason->getTvShow()->getIdTmdb(), ['language' => 'fr'])->getSeasons();
+            $_tmdbTvSeasons = $this->tmdbClient->getTvShowDetails($tvSeason->getTvShow()->getIdTmdb(), ['language' => $searchLocaleSetting])->getSeasons();
 
             foreach ($_tmdbTvSeasons as $tmdbTvSeason) {
                 if ($tmdbTvSeason->getSeasonNumber() === $tvSeason->getNumber()) {
@@ -85,7 +90,7 @@ class TvShowController extends AbstractController
                 $tvEpisode->getShow()->getIdTmdb(),
                 $tvEpisode->getSeason()->getNumber(),
                 $tvEpisode->getNumber(),
-                ['language' => 'fr']
+                ['language' => $searchLocaleSetting]
             );
         }
 
@@ -103,9 +108,13 @@ class TvShowController extends AbstractController
      */
     public function getTvShowSeasons(int $tmdbId,
         TvShowRepository $tvShowRepository,
-        TvSeasonRepository $tvSeasonRepository): Response
+        TvSeasonRepository $tvSeasonRepository,
+        SettingRepository $settingRepository): Response
     {
-        $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tmdbId, ['language' => 'fr']);
+        $searchLocaleSetting = $settingRepository->findOneBy([
+                'key' => Setting::SEARCH_LOCALE,
+            ]) ?? 'fr';
+        $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tmdbId, ['language' => $searchLocaleSetting]);
         if (!$tmdbTvShow instanceof TvTvIdGetResponse200) {
             throw $this->createNotFoundException(sprintf('TvShow #%s not found in TMDB', $tmdbId));
         }
@@ -137,12 +146,16 @@ class TvShowController extends AbstractController
      */
     public function addTvSeason(Request $request,
         int $tmdbId,
-        TvShowRepository $tvShowRepository): Response
+        TvShowRepository $tvShowRepository,
+        SettingRepository $settingRepository): Response
     {
         $tvShow = $tvShowRepository->findOneBy(['idTmdb' => $tmdbId]);
 
         if (!$tvShow instanceof TvShow) {
-            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tmdbId, ['language' => 'fr']);
+            $searchLocaleSetting = $settingRepository->findOneBy([
+                    'key' => Setting::SEARCH_LOCALE,
+                ]) ?? 'fr';
+            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tmdbId, ['language' => $searchLocaleSetting]);
 
             $tvShow = new TvShow();
             $tvShow->setIdTmdb($tmdbTvShow->getId())

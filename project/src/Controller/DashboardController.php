@@ -3,7 +3,9 @@
 namespace Quasarr\Controller;
 
 use Quasarr\Entity\Movie;
+use Quasarr\Enum\Setting;
 use Quasarr\Repository\MovieRepository;
+use Quasarr\Repository\SettingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,8 +24,12 @@ class DashboardController extends AbstractController
     /**
      * @Route("/", name="dashboard")
      */
-    public function index(Request $request, MovieRepository $movieRepository): Response
+    public function index(Request $request, MovieRepository $movieRepository, SettingRepository $settingRepository): Response
     {
+        $searchLocaleSetting = $settingRepository->findOneBy([
+            'key' => Setting::SEARCH_LOCALE,
+        ]) ?? 'fr';
+
         if ($request->isMethod('POST')) {
             $search = $request->request->get('search');
 
@@ -31,11 +37,11 @@ class DashboardController extends AbstractController
                 return $this->redirectToRoute('dashboard');
             }
 
-            $movies = $this->tmdbClient->searchMovie(['query' => $search, 'language' => 'fr'])->getResults();
-            $tvShows = $this->tmdbClient->searchTvShow(['query' => $search, 'language' => 'fr'])->getResults();
+            $movies = $this->tmdbClient->searchMovie(['query' => $search, 'language' => $searchLocaleSetting])->getResults();
+            $tvShows = $this->tmdbClient->searchTvShow(['query' => $search, 'language' => $searchLocaleSetting])->getResults();
         } else {
-            $movies = $this->tmdbClient->getMoviePopulars(['language' => 'fr'])->getResults();
-            $tvShows = $this->tmdbClient->getTvShowPopulars(['language' => 'fr'])->getResults();
+            $movies = $this->tmdbClient->getMoviePopulars(['language' => $searchLocaleSetting])->getResults();
+            $tvShows = $this->tmdbClient->getTvShowPopulars(['language' => $searchLocaleSetting])->getResults();
         }
 
         $existingMovies = $movieRepository->findBy([

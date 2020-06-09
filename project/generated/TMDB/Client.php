@@ -114,7 +114,7 @@ class Client extends \Jane\OpenApiRuntime\Client\Psr18Client
     /**
      * Get the primary TV show details by id.
 
-    | **Date** | **Change** |
+    | **Date** | **Change** |.
      *
      * @param array $queryParameters {
      *
@@ -136,7 +136,7 @@ class Client extends \Jane\OpenApiRuntime\Client\Psr18Client
     /**
      * Get the TV episode details by id.
 
-    | **Date** | **Change** |
+    | **Date** | **Change** |.
      *
      * @param array $queryParameters {
      *

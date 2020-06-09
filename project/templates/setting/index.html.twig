@@ -22,6 +22,9 @@
             {{ form_row(form.languages, {
                 attr: { class: 'form-check-inline' }
             }) }}
+            {{ form_row(form.search_locale, {
+                attr: { class: 'form-check-inline' }
+            }) }}
             <div class="form-row">
                 <div class="col-6 form-group">
                     {{ form_errors(form.max_size) }}

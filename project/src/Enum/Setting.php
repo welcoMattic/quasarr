@@ -8,4 +8,5 @@ class Setting
     const QUALITIES = 'qualities';
     const LANGUAGES = 'languages';
     const MAX_SIZE = 'max_size';
+    const SEARCH_LOCALE = 'search_locale';
 }

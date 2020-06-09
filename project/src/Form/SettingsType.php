@@ -57,6 +57,14 @@ class SettingsType extends AbstractType
                     'autocomplete' => 'off',
                 ],
             ])
+            ->add(Setting::SEARCH_LOCALE, ChoiceType::class, [
+                'choices' => [
+                    'Français' => 'fr',
+                    'English' => 'en',
+                ],
+                'multiple' => false,
+                'expanded' => true,
+            ])
         ;
     }
 
