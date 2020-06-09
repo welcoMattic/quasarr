@@ -6,6 +6,7 @@ use Quasarr\Entity\Torrent;
 use Quasarr\Entity\TvSeason;
 use Quasarr\Entity\TvShow;
 use Quasarr\Enum\ResourceStatus;
+use Quasarr\Enum\Setting;
 use Quasarr\Message\DownloadTvSeasonMessage;
 use Quasarr\Repository\SettingRepository;
 use Quasarr\Repository\TorrentRepository;
