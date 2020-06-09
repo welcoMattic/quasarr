@@ -55,7 +55,7 @@ class SettingsType extends AbstractType
                 'help' => 'auto convert as type',
                 'attr' => [
                     'autocomplete' => 'off',
-                ]
+                ],
             ])
         ;
     }

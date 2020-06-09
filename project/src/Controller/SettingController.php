@@ -19,7 +19,7 @@ class SettingController extends AbstractController
     {
         $currentSettings = [];
         foreach ($settingRepository->getAllAsArray() as $setting) {
-            $currentSettings[$setting['key']] = strpos($setting['value'], ',') !== false ? explode(',', $setting['value']) : $setting['value'];
+            $currentSettings[$setting['key']] = false !== strpos($setting['value'], ',') ? explode(',', $setting['value']) : $setting['value'];
         }
 
         $form = $this->createForm(SettingsType::class, $currentSettings);

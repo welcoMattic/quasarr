@@ -8,10 +8,12 @@ use Quasarr\Entity\Torrent;
 use Quasarr\Entity\TvEpisode;
 use Quasarr\Entity\TvSeason;
 use Quasarr\Enum\ResourceStatus;
+use Quasarr\Message\StoreMovieMessage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Transmission\Client;
 
 class CheckDownloadedTorrentsCommand extends Command
@@ -19,6 +21,7 @@ class CheckDownloadedTorrentsCommand extends Command
     protected static $defaultName = 'check-downloaded-torrents';
 
     private $transmissionClient;
+    private $bus;
     private $doctrine;
     private $movieRepository;
     private $tvSeasonRepository;
@@ -30,9 +33,13 @@ class CheckDownloadedTorrentsCommand extends Command
         $this->setDescription('Check torrents download progress, and process downloaded ones.');
     }
 
-    public function __construct(Client $transmissionClient, ManagerRegistry $doctrine)
+    public function __construct(
+        Client $transmissionClient,
+        MessageBusInterface $bus,
+        ManagerRegistry $doctrine)
     {
         $this->transmissionClient = $transmissionClient;
+        $this->bus = $bus;
         $this->doctrine = $doctrine;
         $this->movieRepository = $doctrine->getRepository(Movie::class);
         $this->tvSeasonRepository = $doctrine->getRepository(TvSeason::class);
@@ -75,7 +82,7 @@ class CheckDownloadedTorrentsCommand extends Command
         return 0;
     }
 
-    private function checkTorrent(Torrent $torrent)
+    private function checkTorrent(Torrent $torrent): void
     {
         /** @var \Transmission\Models\Torrent $transmissionTorrent */
         $transmissionTorrent = $this->transmissionClient->get($torrent->getHash())->first();
@@ -83,10 +90,36 @@ class CheckDownloadedTorrentsCommand extends Command
         if ($transmissionTorrent && $transmissionTorrent->isDone()) {
             if (Torrent::MOVIE_TYPE === $torrent->getMediaType()) {
                 $movie = $this->movieRepository->find($torrent->getMediaId());
+
+                if (ResourceStatus::DOWNLOADING !== $movie->getStatus()) {
+                    return;
+                }
+
+                $filepath = sprintf('%s%s%s',
+                    $transmissionTorrent->get('downloadDir'),
+                    DIRECTORY_SEPARATOR,
+                    $this->findMainFile($transmissionTorrent->get('files'))['name']
+                );
+                $this->bus->dispatch(new StoreMovieMessage($movie->getId(), $filepath));
                 $movie->setStatus(ResourceStatus::DOWNLOADED);
+
                 $this->doctrine->getManager()->flush();
-                // @todo send message into RenameAndLinkQueue
+
+                return;
             }
         }
+    }
+
+    private function findMainFile(array $files): array
+    {
+        uasort($files, function ($fileA, $fileB) {
+            if ($fileA['length'] === $fileB['length']) {
+                return 0;
+            }
+
+            return ($fileA['length'] < $fileB['length']) ? -1 : 1;
+        });
+
+        return $files[0];
     }
 }

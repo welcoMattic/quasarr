@@ -9,6 +9,9 @@ x-services-templates:
             - redis
         volumes:
             - "../../${PROJECT_DIRECTORY}:/home/app/application:cached"
+            - type: bind
+              source: ./library
+              target: /library
         user: app
         labels:
             - "docker-starter.worker.${PROJECT_NAME}"

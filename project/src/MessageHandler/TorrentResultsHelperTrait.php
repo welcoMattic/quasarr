@@ -2,7 +2,6 @@
 
 namespace Quasarr\MessageHandler;
 
-use Quasarr\Entity\Setting;
 use Quasarr\Entity\Torrent;
 use Quasarr\Enum\Setting as SettingEnum;
 
@@ -48,7 +47,7 @@ trait TorrentResultsHelperTrait
 
         $settings = [];
         foreach ($this->settingRepository->findAll() as $setting) {
-            $settings[$setting->getKey()] = strpos($setting->getValue(), ',') !== false ? explode(',', $setting->getValue()) : $setting->getValue();
+            $settings[$setting->getKey()] = false !== strpos($setting->getValue(), ',') ? explode(',', $setting->getValue()) : $setting->getValue();
 
             if (\in_array($setting->getKey(), [SettingEnum::QUALITIES, SettingEnum::LANGUAGES])) {
                 if (!\is_array($settings[$setting->getKey()])) {
@@ -138,6 +137,6 @@ trait TorrentResultsHelperTrait
         $base = log($size, 1024);
         $suffixes = ['', 'KiB', 'MiB', 'GiB', 'TiB'];
 
-        return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+        return round(pow(1024, $base - floor($base)), $precision).' '.$suffixes[floor($base)];
     }
 }

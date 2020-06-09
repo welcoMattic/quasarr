@@ -1,4 +1,5 @@
 infrastructure/docker/jackett
 infrastructure/docker/transmission
+infrastructure/docker/plex
 infrastructure/docker/library
-
+infrastructure/docker/.env

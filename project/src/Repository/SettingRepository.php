@@ -2,10 +2,9 @@
 
 namespace Quasarr\Repository;
 
-use Doctrine\ORM\Query;
-use Quasarr\Entity\Setting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Quasarr\Entity\Setting;
 
 /**
  * @method Setting|null find($id, $lockMode = null, $lockVersion = null)
