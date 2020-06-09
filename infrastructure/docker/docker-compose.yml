@@ -111,7 +111,7 @@ services:
             - PUID=1000
             - PGID=1000
             - TZ=Europe/Paris
-            - ADVERTISE_IP=
+            - ADVERTISE_IP=${PLEX_ADVERTISE_IP}
             - PLEX_CLAIM=${PLEX_CLAIM}
         volumes:
             - ./plex/config:/config
