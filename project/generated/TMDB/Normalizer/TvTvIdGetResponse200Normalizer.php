@@ -19,12 +19,12 @@ class TvTvIdGetResponse200Normalizer implements DenormalizerInterface, Normalize
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvTvIdGetResponse200' === $type;
+        return $type === 'TMDB\\API\\Model\\TvTvIdGetResponse200';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvTvIdGetResponse200' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdGetResponse200';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -36,9 +36,9 @@ class TvTvIdGetResponse200Normalizer implements DenormalizerInterface, Normalize
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\TvTvIdGetResponse200();
-        if (\array_key_exists('backdrop_path', $data) && null !== $data['backdrop_path']) {
+        if (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] !== null) {
             $object->setBackdropPath($data['backdrop_path']);
-        } elseif (\array_key_exists('backdrop_path', $data) && null === $data['backdrop_path']) {
+        } elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
             $object->setBackdropPath(null);
         }
         if (\array_key_exists('created_by', $data)) {
@@ -78,9 +78,9 @@ class TvTvIdGetResponse200Normalizer implements DenormalizerInterface, Normalize
             }
             $object->setLanguages($values_3);
         }
-        if (\array_key_exists('last_air_date', $data) && null !== $data['last_air_date']) {
+        if (\array_key_exists('last_air_date', $data) && $data['last_air_date'] !== null) {
             $object->setLastAirDate(\DateTime::createFromFormat('Y-m-d', $data['last_air_date'])->setTime(0, 0, 0));
-        } elseif (\array_key_exists('last_air_date', $data) && null === $data['last_air_date']) {
+        } elseif (\array_key_exists('last_air_date', $data) && $data['last_air_date'] === null) {
             $object->setLastAirDate(null);
         }
         if (\array_key_exists('last_episode_to_air', $data)) {
@@ -121,9 +121,9 @@ class TvTvIdGetResponse200Normalizer implements DenormalizerInterface, Normalize
         if (\array_key_exists('popularity', $data)) {
             $object->setPopularity($data['popularity']);
         }
-        if (\array_key_exists('poster_path', $data) && null !== $data['poster_path']) {
+        if (\array_key_exists('poster_path', $data) && $data['poster_path'] !== null) {
             $object->setPosterPath($data['poster_path']);
-        } elseif (\array_key_exists('poster_path', $data) && null === $data['poster_path']) {
+        } elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
             $object->setPosterPath(null);
         }
         if (\array_key_exists('production_companies', $data)) {

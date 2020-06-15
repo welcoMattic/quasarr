@@ -3,6 +3,7 @@
 namespace Quasarr\Controller;
 
 use Quasarr\Entity\Setting;
+use Quasarr\Enum\Setting as SettingEnum;
 use Quasarr\Form\SettingsType;
 use Quasarr\Repository\SettingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,10 +20,12 @@ class SettingController extends AbstractController
     {
         $currentSettings = [];
         foreach ($settingRepository->getAllAsArray() as $setting) {
-            $currentSettings[$setting['key']] = false !== strpos($setting['value'], ',') ? explode(',', $setting['value']) : $setting['value'];
-
-            if (\is_string($currentSettings[$setting['key']])) {
-                $currentSettings[$setting['key']] = false !== strpos($currentSettings[$setting['key']], '|') ? explode('|', $currentSettings[$setting['key']]) : $currentSettings[$setting['key']];
+            if (false !== strpos($setting['value'], ',')) {
+                $currentSettings[$setting['key']] = explode(',', $setting['value']);
+            } elseif (\in_array($setting['key'], [SettingEnum::LANGUAGES, SettingEnum::QUALITIES, SettingEnum::RESOLUTIONS])) {
+                $currentSettings[$setting['key']] = [$setting['value']];
+            } else {
+                $currentSettings[$setting['key']] = $setting['value'];
             }
         }
 

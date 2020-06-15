@@ -12,7 +12,7 @@ final class StoreMovieMessageHandler implements MessageHandlerInterface
 {
     private $doctrine;
     private $movieRepository;
-    private $destinationDir = '/library/movies/';
+    private $destinationDir = '/library/movies';
 
     public function __construct(ManagerRegistry $doctrine, MovieRepository $movieRepository)
     {
@@ -22,14 +22,13 @@ final class StoreMovieMessageHandler implements MessageHandlerInterface
 
     public function __invoke(StoreMovieMessage $message)
     {
-        $movie = $this->movieRepository->find($message->getId());
+        $movie = $this->movieRepository->find($message->getMovieId());
 
-        if (link($message->getFilepath(), sprintf('%s%s', $this->destinationDir, basename($message->getFilepath())))) {
+        if (link($message->getFilepath(), sprintf('%s/%s', $this->destinationDir, basename($message->getFilepath())))) {
             $movie->setStatus(ResourceStatus::PROCESSED);
             $this->doctrine->getManager()->flush();
-            echo 'success';
-        } else {
-            echo 'fail';
         }
+
+        // @todo: log failure
     }
 }

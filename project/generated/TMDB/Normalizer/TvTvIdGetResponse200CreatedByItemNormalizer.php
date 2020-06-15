@@ -19,12 +19,12 @@ class TvTvIdGetResponse200CreatedByItemNormalizer implements DenormalizerInterfa
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvTvIdGetResponse200CreatedByItem' === $type;
+        return $type === 'TMDB\\API\\Model\\TvTvIdGetResponse200CreatedByItem';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvTvIdGetResponse200CreatedByItem' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdGetResponse200CreatedByItem';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -48,9 +48,9 @@ class TvTvIdGetResponse200CreatedByItemNormalizer implements DenormalizerInterfa
         if (\array_key_exists('gender', $data)) {
             $object->setGender($data['gender']);
         }
-        if (\array_key_exists('profile_path', $data) && null !== $data['profile_path']) {
+        if (\array_key_exists('profile_path', $data) && $data['profile_path'] !== null) {
             $object->setProfilePath($data['profile_path']);
-        } elseif (\array_key_exists('profile_path', $data) && null === $data['profile_path']) {
+        } elseif (\array_key_exists('profile_path', $data) && $data['profile_path'] === null) {
             $object->setProfilePath(null);
         }
 

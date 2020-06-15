@@ -2,7 +2,7 @@
 
 namespace TMDB\API\Authentication;
 
-class ApiKeyAuthentication implements \Http\Client\Common\Plugin
+class ApiKeyAuthentication implements \Jane\OpenApiRuntime\Client\AuthenticationPlugin
 {
     private $apiKey;
 
@@ -11,7 +11,7 @@ class ApiKeyAuthentication implements \Http\Client\Common\Plugin
         $this->{'apiKey'} = $apiKey;
     }
 
-    public function handleRequest(\Psr\Http\Message\RequestInterface $request, callable $next, callable $first): \Http\Promise\Promise
+    public function authentication(\Psr\Http\Message\RequestInterface $request): \Psr\Http\Message\RequestInterface
     {
         $uri = $request->getUri();
         $query = $uri->getQuery();
@@ -22,6 +22,11 @@ class ApiKeyAuthentication implements \Http\Client\Common\Plugin
         $uri = $uri->withQuery($query);
         $request = $request->withUri($uri);
 
-        return $next($request);
+        return $request;
+    }
+
+    public function getScope(): string
+    {
+        return 'api_key';
     }
 }

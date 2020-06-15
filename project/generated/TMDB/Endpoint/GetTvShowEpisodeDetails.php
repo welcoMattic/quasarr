@@ -69,14 +69,19 @@ class GetTvShowEpisodeDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint i
      */
     protected function transformResponseBody(string $body, int $status, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
-        if (200 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (200 === $status && mb_strpos($contentType, 'application/json') !== false) {
             return $serializer->deserialize($body, 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse200', 'json');
         }
-        if (401 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (401 === $status && mb_strpos($contentType, 'application/json') !== false) {
             throw new \TMDB\API\Exception\GetTvShowEpisodeDetailsUnauthorizedException($serializer->deserialize($body, 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse401', 'json'));
         }
-        if (404 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (404 === $status && mb_strpos($contentType, 'application/json') !== false) {
             throw new \TMDB\API\Exception\GetTvShowEpisodeDetailsNotFoundException($serializer->deserialize($body, 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse404', 'json'));
         }
+    }
+
+    public function getAuthenticationScopes(): array
+    {
+        return ['api_key'];
     }
 }

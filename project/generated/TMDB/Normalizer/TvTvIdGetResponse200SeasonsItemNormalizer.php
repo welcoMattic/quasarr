@@ -19,12 +19,12 @@ class TvTvIdGetResponse200SeasonsItemNormalizer implements DenormalizerInterface
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvTvIdGetResponse200SeasonsItem' === $type;
+        return $type === 'TMDB\\API\\Model\\TvTvIdGetResponse200SeasonsItem';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvTvIdGetResponse200SeasonsItem' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdGetResponse200SeasonsItem';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -36,9 +36,9 @@ class TvTvIdGetResponse200SeasonsItemNormalizer implements DenormalizerInterface
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\TvTvIdGetResponse200SeasonsItem();
-        if (\array_key_exists('air_date', $data) && null !== $data['air_date']) {
+        if (\array_key_exists('air_date', $data) && $data['air_date'] !== null) {
             $object->setAirDate(\DateTime::createFromFormat('Y-m-d', $data['air_date'])->setTime(0, 0, 0));
-        } elseif (\array_key_exists('air_date', $data) && null === $data['air_date']) {
+        } elseif (\array_key_exists('air_date', $data) && $data['air_date'] === null) {
             $object->setAirDate(null);
         }
         if (\array_key_exists('episode_count', $data)) {
@@ -53,9 +53,9 @@ class TvTvIdGetResponse200SeasonsItemNormalizer implements DenormalizerInterface
         if (\array_key_exists('overview', $data)) {
             $object->setOverview($data['overview']);
         }
-        if (\array_key_exists('poster_path', $data) && null !== $data['poster_path']) {
+        if (\array_key_exists('poster_path', $data) && $data['poster_path'] !== null) {
             $object->setPosterPath($data['poster_path']);
-        } elseif (\array_key_exists('poster_path', $data) && null === $data['poster_path']) {
+        } elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
             $object->setPosterPath(null);
         }
         if (\array_key_exists('season_number', $data)) {

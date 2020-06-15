@@ -4,29 +4,22 @@ namespace Quasarr\Message;
 
 final class StoreMovieMessage
 {
-    private $id;
+    private $movieId;
     private $filepath;
 
-    public function __construct(int $id, string $filepath)
+    public function __construct(int $movieId, string $filepath)
     {
-        $this->id = $id;
+        $this->movieId = $movieId;
         $this->filepath = $filepath;
     }
 
-    public function getId(): string
+    public function getMovieId(): string
     {
-        return $this->id;
+        return $this->movieId;
     }
 
     public function getFilepath(): string
     {
         return $this->filepath;
-    }
-
-    public function setFilepath(string $filepath)
-    {
-        $this->filepath = $filepath;
-
-        return $this;
     }
 }

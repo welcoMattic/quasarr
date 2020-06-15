@@ -2,6 +2,7 @@
 
 namespace Quasarr\Factory;
 
+use Jane\OpenApiRuntime\Client\Plugin\AuthenticationRegistry;
 use TMDB\API\Authentication\ApiKeyAuthentication;
 use TMDB\API\Client;
 
@@ -19,6 +20,6 @@ final class TMDBClientFactory
 
     public function create(): Client
     {
-        return Client::create(null, [new ApiKeyAuthentication($this->tmdbApiKey)]);
+        return Client::create(null, [new AuthenticationRegistry([new ApiKeyAuthentication($this->tmdbApiKey)])]);
     }
 }

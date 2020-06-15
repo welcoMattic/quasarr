@@ -19,12 +19,12 @@ class TvTvIdGetResponse200GenresItemNormalizer implements DenormalizerInterface,
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvTvIdGetResponse200GenresItem' === $type;
+        return $type === 'TMDB\\API\\Model\\TvTvIdGetResponse200GenresItem';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvTvIdGetResponse200GenresItem' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdGetResponse200GenresItem';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])

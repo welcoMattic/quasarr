@@ -19,12 +19,12 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\MovieMovieIdGetResponse200' === $type;
+        return $type === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\MovieMovieIdGetResponse200' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -39,9 +39,9 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
         if (\array_key_exists('adult', $data)) {
             $object->setAdult($data['adult']);
         }
-        if (\array_key_exists('backdrop_path', $data) && null !== $data['backdrop_path']) {
+        if (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] !== null) {
             $object->setBackdropPath($data['backdrop_path']);
-        } elseif (\array_key_exists('backdrop_path', $data) && null === $data['backdrop_path']) {
+        } elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
             $object->setBackdropPath(null);
         }
         if (\array_key_exists('budget', $data)) {
@@ -66,9 +66,9 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
         if (\array_key_exists('popularity', $data)) {
             $object->setPopularity($data['popularity']);
         }
-        if (\array_key_exists('poster_path', $data) && null !== $data['poster_path']) {
+        if (\array_key_exists('poster_path', $data) && $data['poster_path'] !== null) {
             $object->setPosterPath($data['poster_path']);
-        } elseif (\array_key_exists('poster_path', $data) && null === $data['poster_path']) {
+        } elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
             $object->setPosterPath(null);
         }
         if (\array_key_exists('production_companies', $data)) {

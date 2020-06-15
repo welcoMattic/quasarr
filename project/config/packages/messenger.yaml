@@ -14,3 +14,4 @@ framework:
             Quasarr\Message\DownloadTvSeasonMessage: async
             Quasarr\Message\DownloadTvEpisodeMessage: async
             Quasarr\Message\StoreMovieMessage: async
+            Quasarr\Message\StoreTvEpisodeMessage: async

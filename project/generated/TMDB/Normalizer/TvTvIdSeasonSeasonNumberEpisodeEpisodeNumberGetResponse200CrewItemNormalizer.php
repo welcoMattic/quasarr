@@ -19,12 +19,12 @@ class TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse200CrewItemNormaliz
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse200CrewItem' === $type;
+        return $type === 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse200CrewItem';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse200CrewItem' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse200CrewItem';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -51,9 +51,9 @@ class TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse200CrewItemNormaliz
         if (\array_key_exists('job', $data)) {
             $object->setJob($data['job']);
         }
-        if (\array_key_exists('profile_path', $data) && null !== $data['profile_path']) {
+        if (\array_key_exists('profile_path', $data) && $data['profile_path'] !== null) {
             $object->setProfilePath($data['profile_path']);
-        } elseif (\array_key_exists('profile_path', $data) && null === $data['profile_path']) {
+        } elseif (\array_key_exists('profile_path', $data) && $data['profile_path'] === null) {
             $object->setProfilePath(null);
         }
 

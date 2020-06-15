@@ -60,14 +60,19 @@ class GetMoviePopulars extends \Jane\OpenApiRuntime\Client\BaseEndpoint implemen
      */
     protected function transformResponseBody(string $body, int $status, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
-        if (200 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (200 === $status && mb_strpos($contentType, 'application/json') !== false) {
             return $serializer->deserialize($body, 'TMDB\\API\\Model\\MoviePopularGetResponse200', 'json');
         }
-        if (401 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (401 === $status && mb_strpos($contentType, 'application/json') !== false) {
             throw new \TMDB\API\Exception\GetMoviePopularsUnauthorizedException($serializer->deserialize($body, 'TMDB\\API\\Model\\MoviePopularGetResponse401', 'json'));
         }
-        if (404 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (404 === $status && mb_strpos($contentType, 'application/json') !== false) {
             throw new \TMDB\API\Exception\GetMoviePopularsNotFoundException($serializer->deserialize($body, 'TMDB\\API\\Model\\MoviePopularGetResponse404', 'json'));
         }
+    }
+
+    public function getAuthenticationScopes(): array
+    {
+        return ['api_key'];
     }
 }

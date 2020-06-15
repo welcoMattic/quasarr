@@ -2,6 +2,9 @@
 
 namespace Quasarr\Form;
 
+use Quasarr\Enum\Languages;
+use Quasarr\Enum\Qualities;
+use Quasarr\Enum\Resolutions;
 use Quasarr\Enum\Setting;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -16,35 +19,35 @@ class SettingsType extends AbstractType
         $builder
             ->add(Setting::RESOLUTIONS, ChoiceType::class, [
                 'choices' => [
-                    'any' => 'any',
-                    '480p' => '480p',
-                    '720p' => '720p',
-                    '1080p' => '1080p',
-                    '2160p' => '2160p',
+                    'ANY' => Resolutions::ANY,
+                    '480p' => Resolutions::_480p,
+                    '720p' => Resolutions::_720p,
+                    '1080p' => Resolutions::_1080p,
+                    '2160p' => Resolutions::_2160p,
                 ],
                 'multiple' => true,
                 'expanded' => true,
             ])
             ->add(Setting::QUALITIES, ChoiceType::class, [
                 'choices' => [
-                    'any' => 'any',
-                    'SDTV' => 'SDTV',
-                    'WEBDL' => 'WEBDL|WEB-DL|WEBRip',
-                    'DVD' => 'DVD|DVDRip',
-                    'HDTV' => 'HDTV|HDRip',
-                    'BluRay' => 'BluRay|BRip|BRRip|BDRip',
-                    '4K' => '4K|4KLight',
+                    'ANY' => Qualities::ANY,
+                    'SDTV' => Qualities::SDTV,
+                    'WEBDL' => Qualities::WEBDL,
+                    'DVD' => Qualities::DVD,
+                    'HDTV' => Qualities::HDTV,
+                    'BluRay' => Qualities::BLURAY,
+                    '4K' => Qualities::_4K,
                 ],
                 'multiple' => true,
                 'expanded' => true,
             ])
             ->add(Setting::LANGUAGES, ChoiceType::class, [
                 'choices' => [
-                    'any' => 'any',
-                    'FRENCH (VFF, VFQ)' => 'VFF|VFQ',
-                    'VFF' => 'VFF',
-                    'VOSTFR' => 'VOSTFR',
-                    'MULTI' => 'MULTI',
+                    'ANY' => Languages::ANY,
+                    'FRENCH (VFF, VFQ)' => Languages::FRENCH,
+                    'VFF' => Languages::VFF,
+                    'VOSTFR' => Languages::VOSTFR,
+                    'MULTI' => Languages::MULTI,
                 ],
                 'multiple' => true,
                 'expanded' => true,

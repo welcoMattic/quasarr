@@ -37,11 +37,11 @@ class DashboardController extends AbstractController
                 return $this->redirectToRoute('dashboard');
             }
 
-            $movies = $this->tmdbClient->searchMovie(['query' => $search, 'language' => $searchLocaleSetting])->getResults();
-            $tvShows = $this->tmdbClient->searchTvShow(['query' => $search, 'language' => $searchLocaleSetting])->getResults();
+            $movies = $this->tmdbClient->searchMovie(['query' => $search, 'language' => $searchLocaleSetting->getValue()])->getResults();
+            $tvShows = $this->tmdbClient->searchTvShow(['query' => $search, 'language' => $searchLocaleSetting->getValue()])->getResults();
         } else {
-            $movies = $this->tmdbClient->getMoviePopulars(['language' => $searchLocaleSetting])->getResults();
-            $tvShows = $this->tmdbClient->getTvShowPopulars(['language' => $searchLocaleSetting])->getResults();
+            $movies = $this->tmdbClient->getMoviePopulars(['language' => $searchLocaleSetting->getValue()])->getResults();
+            $tvShows = $this->tmdbClient->getTvShowPopulars(['language' => $searchLocaleSetting->getValue()])->getResults();
         }
 
         $existingMovies = $movieRepository->findBy([
