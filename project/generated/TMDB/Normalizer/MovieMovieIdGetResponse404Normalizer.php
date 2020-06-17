@@ -19,12 +19,12 @@ class MovieMovieIdGetResponse404Normalizer implements DenormalizerInterface, Nor
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\MovieMovieIdGetResponse404' === $type;
+        return $type === 'TMDB\\API\\Model\\MovieMovieIdGetResponse404';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\MovieMovieIdGetResponse404' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\MovieMovieIdGetResponse404';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])

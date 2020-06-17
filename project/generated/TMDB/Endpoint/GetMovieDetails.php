@@ -63,14 +63,19 @@ class GetMovieDetails extends \Jane\OpenApiRuntime\Client\BaseEndpoint implement
      */
     protected function transformResponseBody(string $body, int $status, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
-        if (200 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (200 === $status && mb_strpos($contentType, 'application/json') !== false) {
             return $serializer->deserialize($body, 'TMDB\\API\\Model\\MovieMovieIdGetResponse200', 'json');
         }
-        if (401 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (401 === $status && mb_strpos($contentType, 'application/json') !== false) {
             throw new \TMDB\API\Exception\GetMovieDetailsUnauthorizedException($serializer->deserialize($body, 'TMDB\\API\\Model\\MovieMovieIdGetResponse401', 'json'));
         }
-        if (404 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (404 === $status && mb_strpos($contentType, 'application/json') !== false) {
             throw new \TMDB\API\Exception\GetMovieDetailsNotFoundException($serializer->deserialize($body, 'TMDB\\API\\Model\\MovieMovieIdGetResponse404', 'json'));
         }
+    }
+
+    public function getAuthenticationScopes(): array
+    {
+        return ['api_key'];
     }
 }

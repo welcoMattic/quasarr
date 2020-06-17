@@ -3,12 +3,14 @@
 namespace Quasarr\Command;
 
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 use Quasarr\Entity\Movie;
 use Quasarr\Entity\Torrent;
 use Quasarr\Entity\TvEpisode;
 use Quasarr\Entity\TvSeason;
 use Quasarr\Enum\ResourceStatus;
 use Quasarr\Message\StoreMovieMessage;
+use Quasarr\Message\StoreTvEpisodeMessage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,6 +25,7 @@ class CheckDownloadedTorrentsCommand extends Command
     private $transmissionClient;
     private $bus;
     private $doctrine;
+    private $logger;
     private $movieRepository;
     private $tvSeasonRepository;
     private $tvEpisodeRepository;
@@ -36,11 +39,13 @@ class CheckDownloadedTorrentsCommand extends Command
     public function __construct(
         Client $transmissionClient,
         MessageBusInterface $bus,
-        ManagerRegistry $doctrine)
+        ManagerRegistry $doctrine,
+        LoggerInterface $logger)
     {
         $this->transmissionClient = $transmissionClient;
         $this->bus = $bus;
         $this->doctrine = $doctrine;
+        $this->logger = $logger;
         $this->movieRepository = $doctrine->getRepository(Movie::class);
         $this->tvSeasonRepository = $doctrine->getRepository(TvSeason::class);
         $this->tvEpisodeRepository = $doctrine->getRepository(TvEpisode::class);
@@ -77,7 +82,21 @@ class CheckDownloadedTorrentsCommand extends Command
             $this->checkTorrent($torrent);
         }
 
-        // @todo: handle tvSeasons and tvEpisodes
+        foreach ($downloadingEpisodes as $downloadingEpisode) {
+            $torrent = $this->torrentRepository->findOneBy([
+                'mediaId' => $downloadingEpisode->getId(),
+                'mediaType' => Torrent::TVEPISODE_TYPE,
+            ]);
+
+            if (!$torrent instanceof Torrent) {
+                // log something
+                continue;
+            }
+
+            $this->checkTorrent($torrent);
+        }
+
+        // @todo: handle tvSeasons
 
         return 0;
     }
@@ -107,9 +126,32 @@ class CheckDownloadedTorrentsCommand extends Command
 
                 return;
             }
+
+            if (Torrent::TVEPISODE_TYPE === $torrent->getMediaType()) {
+                $tvEpisode = $this->tvEpisodeRepository->find($torrent->getMediaId());
+
+                if (ResourceStatus::DOWNLOADING !== $tvEpisode->getStatus()) {
+                    return;
+                }
+
+                $filepath = sprintf('%s%s%s',
+                    $transmissionTorrent->get('downloadDir'),
+                    DIRECTORY_SEPARATOR,
+                    $this->findMainFile($transmissionTorrent->get('files'))['name']
+                );
+                $this->bus->dispatch(new StoreTvEpisodeMessage($tvEpisode->getId(), $filepath));
+                $tvEpisode->setStatus(ResourceStatus::DOWNLOADED);
+
+                $this->doctrine->getManager()->flush();
+
+                return;
+            }
         }
     }
 
+    /**
+     * We sort files by size to get the first, the video one.
+     */
     private function findMainFile(array $files): array
     {
         uasort($files, function ($fileA, $fileB) {

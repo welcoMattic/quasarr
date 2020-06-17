@@ -19,12 +19,12 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\MovieListObject' === $type;
+        return $type === 'TMDB\\API\\Model\\MovieListObject';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\MovieListObject' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\MovieListObject';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -36,9 +36,9 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\MovieListObject();
-        if (\array_key_exists('poster_path', $data) && null !== $data['poster_path']) {
+        if (\array_key_exists('poster_path', $data) && $data['poster_path'] !== null) {
             $object->setPosterPath($data['poster_path']);
-        } elseif (\array_key_exists('poster_path', $data) && null === $data['poster_path']) {
+        } elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
             $object->setPosterPath(null);
         }
         if (\array_key_exists('adult', $data)) {
@@ -69,9 +69,9 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
         if (\array_key_exists('title', $data)) {
             $object->setTitle($data['title']);
         }
-        if (\array_key_exists('backdrop_path', $data) && null !== $data['backdrop_path']) {
+        if (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] !== null) {
             $object->setBackdropPath($data['backdrop_path']);
-        } elseif (\array_key_exists('backdrop_path', $data) && null === $data['backdrop_path']) {
+        } elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
             $object->setBackdropPath(null);
         }
         if (\array_key_exists('popularity', $data)) {

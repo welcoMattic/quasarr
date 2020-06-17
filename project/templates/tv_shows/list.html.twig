@@ -15,18 +15,18 @@
         <div class="row row-cols-1 row-cols-md-12 mt-5 mb-5">
             {% set badgeClasses = {
                 Downloading: 'primary',
-                Downloaded: 'success',
+                Seeding: 'success',
                 Paused: 'warning'
             } %}
-            {% for tvSeason in tvSeasons %}
+            {% for tvSeason in tvSeasons|filter(tvSeason => torrents[tvSeason.id] is defined) %}
                 <div class="col mb-4">
                     <div class="card"
-                         data-component="download-progress"
-                         data-status-url="{{ torrents is not empty ? path('torrent_status', { hash: torrents[tvSeason.id].hashString }) }}"
-                         data-resume-url="{{ torrents is not empty ? path('torrent_resume', { hash: torrents[tvSeason.id].hashString }) }}"
-                         data-pause-url="{{ torrents is not empty ? path('torrent_pause', { hash: torrents[tvSeason.id].hashString }) }}"
-                         data-hash="{{ torrents is not empty ? torrents[tvSeason.id].hashString }}"
-                         data-status="{{ torrents is not empty ? torrents[tvSeason.id].statusString : 'Missing' }}">
+                         data-component="{{ torrents[tvSeason.id] is defined ? 'download-progress' }}"
+                         data-status-url="{{ torrents[tvSeason.id] is defined ? path('torrent_status', { hash: torrents[tvSeason.id].hashString }) }}"
+                         data-resume-url="{{ torrents[tvSeason.id] is defined ? path('torrent_resume', { hash: torrents[tvSeason.id].hashString }) }}"
+                         data-pause-url="{{ torrents[tvSeason.id] is defined ? path('torrent_pause', { hash: torrents[tvSeason.id].hashString }) }}"
+                         data-hash="{{ torrents[tvSeason.id] is defined ? torrents[tvSeason.id].hashString }}"
+                         data-status="{{ torrents[tvSeason.id] is defined ? torrents[tvSeason.id].statusString : 'Missing' }}">
                         <div class="card-body">
                             <h5 class="card-title">
                                 <img src="https://image.tmdb.org/t/p/w220_and_h330_face{{ tmdbTvSeasons[tvSeason.id].posterPath }}"
@@ -84,11 +84,11 @@
                 <div class="col mb-4">
                     <div class="card"
                          data-component="download-progress"
-                         data-status-url="{{ torrents is not empty ? path('torrent_status', { hash: torrents[tvEpisode.id].hashString }) }}"
-                         data-resume-url="{{ torrents is not empty ? path('torrent_resume', { hash: torrents[tvEpisode.id].hashString }) }}"
-                         data-pause-url="{{ torrents is not empty ? path('torrent_pause', { hash: torrents[tvEpisode.id].hashString }) }}"
-                         data-hash="{{ torrents is not empty ? torrents[tvEpisode.id].hashString }}"
-                         data-status="{{ torrents is not empty ? torrents[tvEpisode.id].statusString : 'Missing' }}">
+                         data-status-url="{{ torrents[tvEpisode.id] is defined ? path('torrent_status', { hash: torrents[tvEpisode.id].hashString }) }}"
+                         data-resume-url="{{ torrents[tvEpisode.id] is defined ? path('torrent_resume', { hash: torrents[tvEpisode.id].hashString }) }}"
+                         data-pause-url="{{ torrents[tvEpisode.id] is defined ? path('torrent_pause', { hash: torrents[tvEpisode.id].hashString }) }}"
+                         data-hash="{{ torrents[tvEpisode.id] is defined ? torrents[tvEpisode.id].hashString }}"
+                         data-status="{{ torrents[tvEpisode.id] is defined ? torrents[tvEpisode.id].statusString : 'Missing' }}">
                         <div class="card-body">
                             <h5 class="card-title">
                                 {{ tvEpisode.show.title ~ ' S' ~ (tvEpisode.season.number|padLeft) ~ 'E' ~ (tvEpisode.number|padLeft) }}

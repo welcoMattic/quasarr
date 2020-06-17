@@ -19,12 +19,12 @@ class MovieMovieIdGetResponse200ProductionCountriesItemNormalizer implements Den
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\MovieMovieIdGetResponse200ProductionCountriesItem' === $type;
+        return $type === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200ProductionCountriesItem';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\MovieMovieIdGetResponse200ProductionCountriesItem' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200ProductionCountriesItem';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])

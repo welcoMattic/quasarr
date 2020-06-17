@@ -68,14 +68,19 @@ class SearchMovie extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \J
      */
     protected function transformResponseBody(string $body, int $status, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
-        if (200 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (200 === $status && mb_strpos($contentType, 'application/json') !== false) {
             return $serializer->deserialize($body, 'TMDB\\API\\Model\\SearchMovieGetResponse200', 'json');
         }
-        if (401 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (401 === $status && mb_strpos($contentType, 'application/json') !== false) {
             throw new \TMDB\API\Exception\SearchMovieUnauthorizedException($serializer->deserialize($body, 'TMDB\\API\\Model\\SearchMovieGetResponse401', 'json'));
         }
-        if (404 === $status && false !== mb_strpos($contentType, 'application/json')) {
+        if (404 === $status && mb_strpos($contentType, 'application/json') !== false) {
             throw new \TMDB\API\Exception\SearchMovieNotFoundException($serializer->deserialize($body, 'TMDB\\API\\Model\\SearchMovieGetResponse404', 'json'));
         }
+    }
+
+    public function getAuthenticationScopes(): array
+    {
+        return ['api_key'];
     }
 }

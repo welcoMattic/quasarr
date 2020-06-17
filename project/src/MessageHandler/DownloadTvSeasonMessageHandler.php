@@ -6,6 +6,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Quasarr\Entity\Torrent;
 use Quasarr\Entity\TvEpisode;
 use Quasarr\Enum\ResourceStatus;
+use Quasarr\Enum\Setting;
 use Quasarr\Message\DownloadTvEpisodeMessage;
 use Quasarr\Message\DownloadTvSeasonMessage;
 use Quasarr\Repository\SettingRepository;
@@ -101,7 +102,7 @@ final class DownloadTvSeasonMessageHandler implements MessageHandlerInterface
             $searchLocaleSetting = $this->settingRepository->findOneBy([
                     'key' => Setting::SEARCH_LOCALE,
                 ]) ?? 'fr';
-            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tvShow->getIdTmdb(), ['language' => $searchLocaleSetting]);
+            $tmdbTvShow = $this->tmdbClient->getTvShowDetails($tvShow->getIdTmdb(), ['language' => $searchLocaleSetting->getValue()]);
 
             $tmdbTvSeason = null;
             foreach ($tmdbTvShow->getSeasons() as $season) {

@@ -19,12 +19,12 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvListResultObject' === $type;
+        return $type === 'TMDB\\API\\Model\\TvListResultObject';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvListResultObject' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvListResultObject';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -36,9 +36,9 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\TvListResultObject();
-        if (\array_key_exists('poster_path', $data) && null !== $data['poster_path']) {
+        if (\array_key_exists('poster_path', $data) && $data['poster_path'] !== null) {
             $object->setPosterPath($data['poster_path']);
-        } elseif (\array_key_exists('poster_path', $data) && null === $data['poster_path']) {
+        } elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
             $object->setPosterPath(null);
         }
         if (\array_key_exists('popularity', $data)) {
@@ -47,9 +47,9 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
         if (\array_key_exists('id', $data)) {
             $object->setId($data['id']);
         }
-        if (\array_key_exists('backdrop_path', $data) && null !== $data['backdrop_path']) {
+        if (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] !== null) {
             $object->setBackdropPath($data['backdrop_path']);
-        } elseif (\array_key_exists('backdrop_path', $data) && null === $data['backdrop_path']) {
+        } elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
             $object->setBackdropPath(null);
         }
         if (\array_key_exists('vote_average', $data)) {

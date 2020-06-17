@@ -19,12 +19,12 @@ class TvTvIdGetResponse200LastEpisodeToAirNormalizer implements DenormalizerInte
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvTvIdGetResponse200LastEpisodeToAir' === $type;
+        return $type === 'TMDB\\API\\Model\\TvTvIdGetResponse200LastEpisodeToAir';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvTvIdGetResponse200LastEpisodeToAir' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdGetResponse200LastEpisodeToAir';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
@@ -36,9 +36,9 @@ class TvTvIdGetResponse200LastEpisodeToAirNormalizer implements DenormalizerInte
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\TvTvIdGetResponse200LastEpisodeToAir();
-        if (\array_key_exists('air_date', $data) && null !== $data['air_date']) {
+        if (\array_key_exists('air_date', $data) && $data['air_date'] !== null) {
             $object->setAirDate(\DateTime::createFromFormat('Y-m-d', $data['air_date'])->setTime(0, 0, 0));
-        } elseif (\array_key_exists('air_date', $data) && null === $data['air_date']) {
+        } elseif (\array_key_exists('air_date', $data) && $data['air_date'] === null) {
             $object->setAirDate(null);
         }
         if (\array_key_exists('episode_number', $data)) {
@@ -62,9 +62,9 @@ class TvTvIdGetResponse200LastEpisodeToAirNormalizer implements DenormalizerInte
         if (\array_key_exists('show_id', $data)) {
             $object->setShowId($data['show_id']);
         }
-        if (\array_key_exists('still_path', $data) && null !== $data['still_path']) {
+        if (\array_key_exists('still_path', $data) && $data['still_path'] !== null) {
             $object->setStillPath($data['still_path']);
-        } elseif (\array_key_exists('still_path', $data) && null === $data['still_path']) {
+        } elseif (\array_key_exists('still_path', $data) && $data['still_path'] === null) {
             $object->setStillPath(null);
         }
         if (\array_key_exists('vote_average', $data)) {

@@ -196,6 +196,14 @@ def stop_workers(c):
 
 
 @task
+def restart_workers(c):
+    """
+    Restart the workers
+    """
+    stop_workers(c)
+    start_workers(c)
+
+@task
 def destroy(c, force=False):
     """
     Clean the infrastructure (remove container, volume, networks)

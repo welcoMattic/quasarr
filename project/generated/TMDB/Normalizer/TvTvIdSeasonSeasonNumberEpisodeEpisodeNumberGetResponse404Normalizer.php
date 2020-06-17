@@ -19,12 +19,12 @@ class TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse404Normalizer imple
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse404' === $type;
+        return $type === 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse404';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse404' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdSeasonSeasonNumberEpisodeEpisodeNumberGetResponse404';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])

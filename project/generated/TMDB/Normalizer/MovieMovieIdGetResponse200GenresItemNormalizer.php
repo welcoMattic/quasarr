@@ -19,12 +19,12 @@ class MovieMovieIdGetResponse200GenresItemNormalizer implements DenormalizerInte
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\MovieMovieIdGetResponse200GenresItem' === $type;
+        return $type === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200GenresItem';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\MovieMovieIdGetResponse200GenresItem' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200GenresItem';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])

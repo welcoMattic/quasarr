@@ -19,12 +19,12 @@ class TvPopularGetResponse200Normalizer implements DenormalizerInterface, Normal
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\TvPopularGetResponse200' === $type;
+        return $type === 'TMDB\\API\\Model\\TvPopularGetResponse200';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\TvPopularGetResponse200' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvPopularGetResponse200';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])

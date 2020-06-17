@@ -54,7 +54,7 @@ class MovieController extends AbstractController
                 }
             }
 
-            $tmdbMovies[$movie->getId()] = $this->tmdbClient->getMovieDetails($movie->getIdTmdb(), ['language' => $searchLocaleSetting]);
+            $tmdbMovies[$movie->getId()] = $this->tmdbClient->getMovieDetails($movie->getIdTmdb(), ['language' => $searchLocaleSetting->getValue()]);
         }
 
         return $this->render('movies/list.html.twig', [
@@ -72,7 +72,7 @@ class MovieController extends AbstractController
         $searchLocaleSetting = $settingRepository->findOneBy([
                 'key' => Setting::SEARCH_LOCALE,
             ]) ?? 'fr';
-        $tmdbMovie = $this->tmdbClient->getMovieDetails($tmdbId, ['language' => $searchLocaleSetting]);
+        $tmdbMovie = $this->tmdbClient->getMovieDetails($tmdbId, ['language' => $searchLocaleSetting->getValue()]);
         if (!$tmdbMovie instanceof MovieMovieIdGetResponse200) {
             throw $this->createNotFoundException(sprintf('Movie #%s not found in TMDB', $tmdbId));
         }

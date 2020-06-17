@@ -19,12 +19,12 @@ class MovieMovieIdGetResponse200SpokenLanguagesItemNormalizer implements Denorma
 
     public function supportsDenormalization($data, $type, $format = null)
     {
-        return 'TMDB\\API\\Model\\MovieMovieIdGetResponse200SpokenLanguagesItem' === $type;
+        return $type === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200SpokenLanguagesItem';
     }
 
     public function supportsNormalization($data, $format = null)
     {
-        return is_object($data) && 'TMDB\\API\\Model\\MovieMovieIdGetResponse200SpokenLanguagesItem' === get_class($data);
+        return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200SpokenLanguagesItem';
     }
 
     public function denormalize($data, $class, $format = null, array $context = [])
