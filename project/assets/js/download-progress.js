@@ -25,14 +25,14 @@ components.forEach((component) => {
     const statusUrl = component.dataset.statusUrl
     const resumeUrl = component.dataset.resumeUrl
     const pauseUrl = component.dataset.pauseUrl
-    const hash = component.dataset.hash
+    const movieId = component.dataset.movieId
 
     setInterval(function () {
         fetch(statusUrl)
             .then((response) => response.json())
             .then((data) => {
-                const progressBar = document.querySelector(`#progress-${hash}`)
-                const titleMovieBadge = document.querySelector(`#title-badge-${hash}`)
+                const progressBar = document.querySelector(`#progress-${movieId}`)
+                const titleMovieBadge = document.querySelector(`#title-badge-${movieId}`)
 
                 progressBar.style.width = data.progress + '%'
                 progressBar.setAttribute('aria-valuenow', data.progress)
