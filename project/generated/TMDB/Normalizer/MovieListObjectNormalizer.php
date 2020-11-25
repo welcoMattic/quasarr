@@ -2,32 +2,29 @@
 
 namespace TMDB\API\Normalizer;
 
-use Jane\JsonSchemaRuntime\Normalizer\CheckArray;
 use Jane\JsonSchemaRuntime\Reference;
+use TMDB\API\Runtime\Normalizer\CheckArray;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
 class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
     use CheckArray;
-
     public function supportsDenormalization($data, $type, $format = null)
     {
         return $type === 'TMDB\\API\\Model\\MovieListObject';
     }
-
     public function supportsNormalization($data, $format = null)
     {
         return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\MovieListObject';
     }
-
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $class, $format = null, array $context = array())
     {
         if (isset($data['$ref'])) {
             return new Reference($data['$ref'], $context['document-origin']);
@@ -36,9 +33,13 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\MovieListObject();
+        if (null === $data || false === \is_array($data)) {
+            return $object;
+        }
         if (\array_key_exists('poster_path', $data) && $data['poster_path'] !== null) {
             $object->setPosterPath($data['poster_path']);
-        } elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
+        }
+        elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
             $object->setPosterPath(null);
         }
         if (\array_key_exists('adult', $data)) {
@@ -51,7 +52,7 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
             $object->setReleaseDate($data['release_date']);
         }
         if (\array_key_exists('genre_ids', $data)) {
-            $values = [];
+            $values = array();
             foreach ($data['genre_ids'] as $value) {
                 $values[] = $value;
             }
@@ -71,7 +72,8 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
         }
         if (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] !== null) {
             $object->setBackdropPath($data['backdrop_path']);
-        } elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
+        }
+        elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
             $object->setBackdropPath(null);
         }
         if (\array_key_exists('popularity', $data)) {
@@ -86,14 +88,14 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
         if (\array_key_exists('vote_average', $data)) {
             $object->setVoteAverage($data['vote_average']);
         }
-
         return $object;
     }
-
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = array())
     {
-        $data = [];
-        $data['poster_path'] = $object->getPosterPath();
+        $data = array();
+        if (null !== $object->getPosterPath()) {
+            $data['poster_path'] = $object->getPosterPath();
+        }
         if (null !== $object->getAdult()) {
             $data['adult'] = $object->getAdult();
         }
@@ -104,7 +106,7 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
             $data['release_date'] = $object->getReleaseDate();
         }
         if (null !== $object->getGenreIds()) {
-            $values = [];
+            $values = array();
             foreach ($object->getGenreIds() as $value) {
                 $values[] = $value;
             }
@@ -122,7 +124,9 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
         if (null !== $object->getTitle()) {
             $data['title'] = $object->getTitle();
         }
-        $data['backdrop_path'] = $object->getBackdropPath();
+        if (null !== $object->getBackdropPath()) {
+            $data['backdrop_path'] = $object->getBackdropPath();
+        }
         if (null !== $object->getPopularity()) {
             $data['popularity'] = $object->getPopularity();
         }
@@ -135,7 +139,6 @@ class MovieListObjectNormalizer implements DenormalizerInterface, NormalizerInte
         if (null !== $object->getVoteAverage()) {
             $data['vote_average'] = $object->getVoteAverage();
         }
-
         return $data;
     }
 }

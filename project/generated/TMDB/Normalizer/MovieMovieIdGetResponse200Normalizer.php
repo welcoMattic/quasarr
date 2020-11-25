@@ -2,32 +2,29 @@
 
 namespace TMDB\API\Normalizer;
 
-use Jane\JsonSchemaRuntime\Normalizer\CheckArray;
 use Jane\JsonSchemaRuntime\Reference;
+use TMDB\API\Runtime\Normalizer\CheckArray;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
 class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
     use CheckArray;
-
     public function supportsDenormalization($data, $type, $format = null)
     {
         return $type === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200';
     }
-
     public function supportsNormalization($data, $format = null)
     {
         return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\MovieMovieIdGetResponse200';
     }
-
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $class, $format = null, array $context = array())
     {
         if (isset($data['$ref'])) {
             return new Reference($data['$ref'], $context['document-origin']);
@@ -36,19 +33,23 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\MovieMovieIdGetResponse200();
+        if (null === $data || false === \is_array($data)) {
+            return $object;
+        }
         if (\array_key_exists('adult', $data)) {
             $object->setAdult($data['adult']);
         }
         if (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] !== null) {
             $object->setBackdropPath($data['backdrop_path']);
-        } elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
+        }
+        elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
             $object->setBackdropPath(null);
         }
         if (\array_key_exists('budget', $data)) {
             $object->setBudget($data['budget']);
         }
         if (\array_key_exists('genres', $data)) {
-            $values = [];
+            $values = array();
             foreach ($data['genres'] as $value) {
                 $values[] = $this->denormalizer->denormalize($value, 'TMDB\\API\\Model\\MovieMovieIdGetResponse200GenresItem', 'json', $context);
             }
@@ -68,18 +69,19 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
         }
         if (\array_key_exists('poster_path', $data) && $data['poster_path'] !== null) {
             $object->setPosterPath($data['poster_path']);
-        } elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
+        }
+        elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
             $object->setPosterPath(null);
         }
         if (\array_key_exists('production_companies', $data)) {
-            $values_1 = [];
+            $values_1 = array();
             foreach ($data['production_companies'] as $value_1) {
                 $values_1[] = $this->denormalizer->denormalize($value_1, 'TMDB\\API\\Model\\MovieMovieIdGetResponse200ProductionCompaniesItem', 'json', $context);
             }
             $object->setProductionCompanies($values_1);
         }
         if (\array_key_exists('production_countries', $data)) {
-            $values_2 = [];
+            $values_2 = array();
             foreach ($data['production_countries'] as $value_2) {
                 $values_2[] = $this->denormalizer->denormalize($value_2, 'TMDB\\API\\Model\\MovieMovieIdGetResponse200ProductionCountriesItem', 'json', $context);
             }
@@ -92,7 +94,7 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
             $object->setRevenue($data['revenue']);
         }
         if (\array_key_exists('spoken_languages', $data)) {
-            $values_3 = [];
+            $values_3 = array();
             foreach ($data['spoken_languages'] as $value_3) {
                 $values_3[] = $this->denormalizer->denormalize($value_3, 'TMDB\\API\\Model\\MovieMovieIdGetResponse200SpokenLanguagesItem', 'json', $context);
             }
@@ -113,22 +115,22 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
         if (\array_key_exists('vote_count', $data)) {
             $object->setVoteCount($data['vote_count']);
         }
-
         return $object;
     }
-
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = array())
     {
-        $data = [];
+        $data = array();
         if (null !== $object->getAdult()) {
             $data['adult'] = $object->getAdult();
         }
-        $data['backdrop_path'] = $object->getBackdropPath();
+        if (null !== $object->getBackdropPath()) {
+            $data['backdrop_path'] = $object->getBackdropPath();
+        }
         if (null !== $object->getBudget()) {
             $data['budget'] = $object->getBudget();
         }
         if (null !== $object->getGenres()) {
-            $values = [];
+            $values = array();
             foreach ($object->getGenres() as $value) {
                 $values[] = $this->normalizer->normalize($value, 'json', $context);
             }
@@ -146,16 +148,18 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
         if (null !== $object->getPopularity()) {
             $data['popularity'] = $object->getPopularity();
         }
-        $data['poster_path'] = $object->getPosterPath();
+        if (null !== $object->getPosterPath()) {
+            $data['poster_path'] = $object->getPosterPath();
+        }
         if (null !== $object->getProductionCompanies()) {
-            $values_1 = [];
+            $values_1 = array();
             foreach ($object->getProductionCompanies() as $value_1) {
                 $values_1[] = $this->normalizer->normalize($value_1, 'json', $context);
             }
             $data['production_companies'] = $values_1;
         }
         if (null !== $object->getProductionCountries()) {
-            $values_2 = [];
+            $values_2 = array();
             foreach ($object->getProductionCountries() as $value_2) {
                 $values_2[] = $this->normalizer->normalize($value_2, 'json', $context);
             }
@@ -168,7 +172,7 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
             $data['revenue'] = $object->getRevenue();
         }
         if (null !== $object->getSpokenLanguages()) {
-            $values_3 = [];
+            $values_3 = array();
             foreach ($object->getSpokenLanguages() as $value_3) {
                 $values_3[] = $this->normalizer->normalize($value_3, 'json', $context);
             }
@@ -189,7 +193,6 @@ class MovieMovieIdGetResponse200Normalizer implements DenormalizerInterface, Nor
         if (null !== $object->getVoteCount()) {
             $data['vote_count'] = $object->getVoteCount();
         }
-
         return $data;
     }
 }

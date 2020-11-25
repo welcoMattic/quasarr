@@ -2,61 +2,52 @@
 
 namespace TMDB\API\Endpoint;
 
-class GetMoviePopulars extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \Jane\OpenApiRuntime\Client\Psr7Endpoint
+class GetMoviePopulars extends \TMDB\API\Runtime\Client\BaseEndpoint implements \TMDB\API\Runtime\Client\Endpoint
 {
     /**
      * Get a list of the current popular movies on TMDb. This list updates daily.
      *
      * @param array $queryParameters {
-     *
-     *     @var string $language
+     *     @var string $language 
      * }
      */
-    public function __construct(array $queryParameters = [])
+    public function __construct(array $queryParameters = array())
     {
         $this->queryParameters = $queryParameters;
     }
-
-    use \Jane\OpenApiRuntime\Client\Psr7EndpointTrait;
-
-    public function getMethod(): string
+    use \TMDB\API\Runtime\Client\EndpointTrait;
+    public function getMethod() : string
     {
         return 'GET';
     }
-
-    public function getUri(): string
+    public function getUri() : string
     {
         return '/movie/popular';
     }
-
-    public function getBody(\Symfony\Component\Serializer\SerializerInterface $serializer, $streamFactory = null): array
+    public function getBody(\Symfony\Component\Serializer\SerializerInterface $serializer, $streamFactory = null) : array
     {
-        return [[], null];
+        return array(array(), null);
     }
-
-    public function getExtraHeaders(): array
+    public function getExtraHeaders() : array
     {
-        return ['Accept' => ['application/json']];
+        return array('Accept' => array('application/json'));
     }
-
-    protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
+    protected function getQueryOptionsResolver() : \Symfony\Component\OptionsResolver\OptionsResolver
     {
         $optionsResolver = parent::getQueryOptionsResolver();
-        $optionsResolver->setDefined(['language']);
-        $optionsResolver->setRequired([]);
-        $optionsResolver->setDefaults(['language' => 'en-US']);
-        $optionsResolver->setAllowedTypes('language', ['string']);
-
+        $optionsResolver->setDefined(array('language'));
+        $optionsResolver->setRequired(array());
+        $optionsResolver->setDefaults(array('language' => 'en-US'));
+        $optionsResolver->setAllowedTypes('language', array('string'));
         return $optionsResolver;
     }
-
     /**
      * {@inheritdoc}
      *
      * @throws \TMDB\API\Exception\GetMoviePopularsUnauthorizedException
      * @throws \TMDB\API\Exception\GetMoviePopularsNotFoundException
      *
-     * @return \TMDB\API\Model\MoviePopularGetResponse200|null
+     * @return null|\TMDB\API\Model\MoviePopularGetResponse200
      */
     protected function transformResponseBody(string $body, int $status, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
@@ -70,9 +61,8 @@ class GetMoviePopulars extends \Jane\OpenApiRuntime\Client\BaseEndpoint implemen
             throw new \TMDB\API\Exception\GetMoviePopularsNotFoundException($serializer->deserialize($body, 'TMDB\\API\\Model\\MoviePopularGetResponse404', 'json'));
         }
     }
-
-    public function getAuthenticationScopes(): array
+    public function getAuthenticationScopes() : array
     {
-        return ['api_key'];
+        return array('api_key');
     }
 }

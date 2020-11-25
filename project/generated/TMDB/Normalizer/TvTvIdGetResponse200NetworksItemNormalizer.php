@@ -2,32 +2,29 @@
 
 namespace TMDB\API\Normalizer;
 
-use Jane\JsonSchemaRuntime\Normalizer\CheckArray;
 use Jane\JsonSchemaRuntime\Reference;
+use TMDB\API\Runtime\Normalizer\CheckArray;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
 class TvTvIdGetResponse200NetworksItemNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
     use CheckArray;
-
     public function supportsDenormalization($data, $type, $format = null)
     {
         return $type === 'TMDB\\API\\Model\\TvTvIdGetResponse200NetworksItem';
     }
-
     public function supportsNormalization($data, $format = null)
     {
         return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdGetResponse200NetworksItem';
     }
-
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $class, $format = null, array $context = array())
     {
         if (isset($data['$ref'])) {
             return new Reference($data['$ref'], $context['document-origin']);
@@ -36,6 +33,9 @@ class TvTvIdGetResponse200NetworksItemNormalizer implements DenormalizerInterfac
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\TvTvIdGetResponse200NetworksItem();
+        if (null === $data || false === \is_array($data)) {
+            return $object;
+        }
         if (\array_key_exists('name', $data)) {
             $object->setName($data['name']);
         }
@@ -48,13 +48,11 @@ class TvTvIdGetResponse200NetworksItemNormalizer implements DenormalizerInterfac
         if (\array_key_exists('origin_country', $data)) {
             $object->setOriginCountry($data['origin_country']);
         }
-
         return $object;
     }
-
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = array())
     {
-        $data = [];
+        $data = array();
         if (null !== $object->getName()) {
             $data['name'] = $object->getName();
         }
@@ -67,7 +65,6 @@ class TvTvIdGetResponse200NetworksItemNormalizer implements DenormalizerInterfac
         if (null !== $object->getOriginCountry()) {
             $data['origin_country'] = $object->getOriginCountry();
         }
-
         return $data;
     }
 }

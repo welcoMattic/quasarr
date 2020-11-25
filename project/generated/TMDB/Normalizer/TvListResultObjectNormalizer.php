@@ -2,32 +2,29 @@
 
 namespace TMDB\API\Normalizer;
 
-use Jane\JsonSchemaRuntime\Normalizer\CheckArray;
 use Jane\JsonSchemaRuntime\Reference;
+use TMDB\API\Runtime\Normalizer\CheckArray;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
 class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
     use CheckArray;
-
     public function supportsDenormalization($data, $type, $format = null)
     {
         return $type === 'TMDB\\API\\Model\\TvListResultObject';
     }
-
     public function supportsNormalization($data, $format = null)
     {
         return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvListResultObject';
     }
-
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $class, $format = null, array $context = array())
     {
         if (isset($data['$ref'])) {
             return new Reference($data['$ref'], $context['document-origin']);
@@ -36,9 +33,13 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\TvListResultObject();
+        if (null === $data || false === \is_array($data)) {
+            return $object;
+        }
         if (\array_key_exists('poster_path', $data) && $data['poster_path'] !== null) {
             $object->setPosterPath($data['poster_path']);
-        } elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
+        }
+        elseif (\array_key_exists('poster_path', $data) && $data['poster_path'] === null) {
             $object->setPosterPath(null);
         }
         if (\array_key_exists('popularity', $data)) {
@@ -49,7 +50,8 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
         }
         if (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] !== null) {
             $object->setBackdropPath($data['backdrop_path']);
-        } elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
+        }
+        elseif (\array_key_exists('backdrop_path', $data) && $data['backdrop_path'] === null) {
             $object->setBackdropPath(null);
         }
         if (\array_key_exists('vote_average', $data)) {
@@ -59,14 +61,14 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
             $object->setOverview($data['overview']);
         }
         if (\array_key_exists('origin_country', $data)) {
-            $values = [];
+            $values = array();
             foreach ($data['origin_country'] as $value) {
                 $values[] = $value;
             }
             $object->setOriginCountry($values);
         }
         if (\array_key_exists('genre_ids', $data)) {
-            $values_1 = [];
+            $values_1 = array();
             foreach ($data['genre_ids'] as $value_1) {
                 $values_1[] = $value_1;
             }
@@ -84,21 +86,23 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
         if (\array_key_exists('original_name', $data)) {
             $object->setOriginalName($data['original_name']);
         }
-
         return $object;
     }
-
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = array())
     {
-        $data = [];
-        $data['poster_path'] = $object->getPosterPath();
+        $data = array();
+        if (null !== $object->getPosterPath()) {
+            $data['poster_path'] = $object->getPosterPath();
+        }
         if (null !== $object->getPopularity()) {
             $data['popularity'] = $object->getPopularity();
         }
         if (null !== $object->getId()) {
             $data['id'] = $object->getId();
         }
-        $data['backdrop_path'] = $object->getBackdropPath();
+        if (null !== $object->getBackdropPath()) {
+            $data['backdrop_path'] = $object->getBackdropPath();
+        }
         if (null !== $object->getVoteAverage()) {
             $data['vote_average'] = $object->getVoteAverage();
         }
@@ -106,14 +110,14 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
             $data['overview'] = $object->getOverview();
         }
         if (null !== $object->getOriginCountry()) {
-            $values = [];
+            $values = array();
             foreach ($object->getOriginCountry() as $value) {
                 $values[] = $value;
             }
             $data['origin_country'] = $values;
         }
         if (null !== $object->getGenreIds()) {
-            $values_1 = [];
+            $values_1 = array();
             foreach ($object->getGenreIds() as $value_1) {
                 $values_1[] = $value_1;
             }
@@ -131,7 +135,6 @@ class TvListResultObjectNormalizer implements DenormalizerInterface, NormalizerI
         if (null !== $object->getOriginalName()) {
             $data['original_name'] = $object->getOriginalName();
         }
-
         return $data;
     }
 }

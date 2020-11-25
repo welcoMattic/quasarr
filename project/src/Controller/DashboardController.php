@@ -28,7 +28,7 @@ class DashboardController extends AbstractController
     {
         $searchLocaleSetting = $settingRepository->findOneBy([
             'key' => Setting::SEARCH_LOCALE,
-        ]) ?? 'fr';
+        ])->getValue() ?? 'fr';
 
         if ($request->isMethod('POST')) {
             $search = $request->request->get('search');
@@ -37,11 +37,11 @@ class DashboardController extends AbstractController
                 return $this->redirectToRoute('dashboard');
             }
 
-            $movies = $this->tmdbClient->searchMovie(['query' => $search, 'language' => $searchLocaleSetting->getValue()])->getResults();
-            $tvShows = $this->tmdbClient->searchTvShow(['query' => $search, 'language' => $searchLocaleSetting->getValue()])->getResults();
+            $movies = $this->tmdbClient->searchMovie(['query' => $search, 'language' => $searchLocaleSetting])->getResults();
+            $tvShows = $this->tmdbClient->searchTvShow(['query' => $search, 'language' => $searchLocaleSetting])->getResults();
         } else {
-            $movies = $this->tmdbClient->getMoviePopulars(['language' => $searchLocaleSetting->getValue()])->getResults();
-            $tvShows = $this->tmdbClient->getTvShowPopulars(['language' => $searchLocaleSetting->getValue()])->getResults();
+            $movies = $this->tmdbClient->getMoviePopulars(['language' => $searchLocaleSetting])->getResults();
+            $tvShows = $this->tmdbClient->getTvShowPopulars(['language' => $searchLocaleSetting])->getResults();
         }
 
         $existingMovies = $movieRepository->findBy([

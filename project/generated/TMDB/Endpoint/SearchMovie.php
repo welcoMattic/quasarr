@@ -2,69 +2,60 @@
 
 namespace TMDB\API\Endpoint;
 
-class SearchMovie extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \Jane\OpenApiRuntime\Client\Psr7Endpoint
+class SearchMovie extends \TMDB\API\Runtime\Client\BaseEndpoint implements \TMDB\API\Runtime\Client\Endpoint
 {
     /**
      * Search for movies.
      *
      * @param array $queryParameters {
-     *
-     *     @var string $query
-     *     @var int $page
-     *     @var int $year
-     *     @var int $primary_release_year
-     *     @var string $language
+     *     @var string $query 
+     *     @var int $page 
+     *     @var int $year 
+     *     @var int $primary_release_year 
+     *     @var string $language 
      * }
      */
-    public function __construct(array $queryParameters = [])
+    public function __construct(array $queryParameters = array())
     {
         $this->queryParameters = $queryParameters;
     }
-
-    use \Jane\OpenApiRuntime\Client\Psr7EndpointTrait;
-
-    public function getMethod(): string
+    use \TMDB\API\Runtime\Client\EndpointTrait;
+    public function getMethod() : string
     {
         return 'GET';
     }
-
-    public function getUri(): string
+    public function getUri() : string
     {
         return '/search/movie';
     }
-
-    public function getBody(\Symfony\Component\Serializer\SerializerInterface $serializer, $streamFactory = null): array
+    public function getBody(\Symfony\Component\Serializer\SerializerInterface $serializer, $streamFactory = null) : array
     {
-        return [[], null];
+        return array(array(), null);
     }
-
-    public function getExtraHeaders(): array
+    public function getExtraHeaders() : array
     {
-        return ['Accept' => ['application/json']];
+        return array('Accept' => array('application/json'));
     }
-
-    protected function getQueryOptionsResolver(): \Symfony\Component\OptionsResolver\OptionsResolver
+    protected function getQueryOptionsResolver() : \Symfony\Component\OptionsResolver\OptionsResolver
     {
         $optionsResolver = parent::getQueryOptionsResolver();
-        $optionsResolver->setDefined(['query', 'page', 'year', 'primary_release_year', 'language']);
-        $optionsResolver->setRequired(['query']);
-        $optionsResolver->setDefaults(['language' => 'en-US']);
-        $optionsResolver->setAllowedTypes('query', ['string']);
-        $optionsResolver->setAllowedTypes('page', ['int']);
-        $optionsResolver->setAllowedTypes('year', ['int']);
-        $optionsResolver->setAllowedTypes('primary_release_year', ['int']);
-        $optionsResolver->setAllowedTypes('language', ['string']);
-
+        $optionsResolver->setDefined(array('query', 'page', 'year', 'primary_release_year', 'language'));
+        $optionsResolver->setRequired(array('query'));
+        $optionsResolver->setDefaults(array('language' => 'en-US'));
+        $optionsResolver->setAllowedTypes('query', array('string'));
+        $optionsResolver->setAllowedTypes('page', array('int'));
+        $optionsResolver->setAllowedTypes('year', array('int'));
+        $optionsResolver->setAllowedTypes('primary_release_year', array('int'));
+        $optionsResolver->setAllowedTypes('language', array('string'));
         return $optionsResolver;
     }
-
     /**
      * {@inheritdoc}
      *
      * @throws \TMDB\API\Exception\SearchMovieUnauthorizedException
      * @throws \TMDB\API\Exception\SearchMovieNotFoundException
      *
-     * @return \TMDB\API\Model\SearchMovieGetResponse200|null
+     * @return null|\TMDB\API\Model\SearchMovieGetResponse200
      */
     protected function transformResponseBody(string $body, int $status, \Symfony\Component\Serializer\SerializerInterface $serializer, ?string $contentType = null)
     {
@@ -78,9 +69,8 @@ class SearchMovie extends \Jane\OpenApiRuntime\Client\BaseEndpoint implements \J
             throw new \TMDB\API\Exception\SearchMovieNotFoundException($serializer->deserialize($body, 'TMDB\\API\\Model\\SearchMovieGetResponse404', 'json'));
         }
     }
-
-    public function getAuthenticationScopes(): array
+    public function getAuthenticationScopes() : array
     {
-        return ['api_key'];
+        return array('api_key');
     }
 }

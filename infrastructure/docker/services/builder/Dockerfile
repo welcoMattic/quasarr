@@ -16,7 +16,7 @@ RUN apk add --no-cache \
 
 RUN pip install pycodestyle
 
-COPY --from=composer:1.10.1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.0.7 /usr/bin/composer /usr/bin/composer
 
 RUN mkdir -p ~/.composer
 

@@ -5,233 +5,381 @@ namespace TMDB\API\Model;
 class MovieListObject
 {
     /**
+     * 
+     *
      * @var string|null
      */
     protected $posterPath;
     /**
+     * 
+     *
      * @var bool
      */
     protected $adult;
     /**
+     * 
+     *
      * @var string
      */
     protected $overview;
     /**
+     * 
+     *
      * @var string
      */
     protected $releaseDate;
     /**
+     * 
+     *
      * @var int[]
      */
     protected $genreIds;
     /**
+     * 
+     *
      * @var int
      */
     protected $id;
     /**
+     * 
+     *
      * @var string
      */
     protected $originalTitle;
     /**
+     * 
+     *
      * @var string
      */
     protected $originalLanguage;
     /**
+     * 
+     *
      * @var string
      */
     protected $title;
     /**
+     * 
+     *
      * @var string|null
      */
     protected $backdropPath;
     /**
+     * 
+     *
      * @var float
      */
     protected $popularity;
     /**
+     * 
+     *
      * @var int
      */
     protected $voteCount;
     /**
+     * 
+     *
      * @var bool
      */
     protected $video;
     /**
+     * 
+     *
      * @var float
      */
     protected $voteAverage;
-
-    public function getPosterPath(): ?string
+    /**
+     * 
+     *
+     * @return string|null
+     */
+    public function getPosterPath() : ?string
     {
         return $this->posterPath;
     }
-
-    public function setPosterPath(?string $posterPath): self
+    /**
+     * 
+     *
+     * @param string|null $posterPath
+     *
+     * @return self
+     */
+    public function setPosterPath(?string $posterPath) : self
     {
         $this->posterPath = $posterPath;
-
         return $this;
     }
-
-    public function getAdult(): bool
+    /**
+     * 
+     *
+     * @return bool
+     */
+    public function getAdult() : bool
     {
         return $this->adult;
     }
-
-    public function setAdult(bool $adult): self
+    /**
+     * 
+     *
+     * @param bool $adult
+     *
+     * @return self
+     */
+    public function setAdult(bool $adult) : self
     {
         $this->adult = $adult;
-
         return $this;
     }
-
-    public function getOverview(): string
+    /**
+     * 
+     *
+     * @return string
+     */
+    public function getOverview() : string
     {
         return $this->overview;
     }
-
-    public function setOverview(string $overview): self
+    /**
+     * 
+     *
+     * @param string $overview
+     *
+     * @return self
+     */
+    public function setOverview(string $overview) : self
     {
         $this->overview = $overview;
-
         return $this;
     }
-
-    public function getReleaseDate(): string
+    /**
+     * 
+     *
+     * @return string
+     */
+    public function getReleaseDate() : string
     {
         return $this->releaseDate;
     }
-
-    public function setReleaseDate(string $releaseDate): self
+    /**
+     * 
+     *
+     * @param string $releaseDate
+     *
+     * @return self
+     */
+    public function setReleaseDate(string $releaseDate) : self
     {
         $this->releaseDate = $releaseDate;
-
         return $this;
     }
-
     /**
+     * 
+     *
      * @return int[]
      */
-    public function getGenreIds(): array
+    public function getGenreIds() : array
     {
         return $this->genreIds;
     }
-
     /**
+     * 
+     *
      * @param int[] $genreIds
+     *
+     * @return self
      */
-    public function setGenreIds(array $genreIds): self
+    public function setGenreIds(array $genreIds) : self
     {
         $this->genreIds = $genreIds;
-
         return $this;
     }
-
-    public function getId(): int
+    /**
+     * 
+     *
+     * @return int
+     */
+    public function getId() : int
     {
         return $this->id;
     }
-
-    public function setId(int $id): self
+    /**
+     * 
+     *
+     * @param int $id
+     *
+     * @return self
+     */
+    public function setId(int $id) : self
     {
         $this->id = $id;
-
         return $this;
     }
-
-    public function getOriginalTitle(): string
+    /**
+     * 
+     *
+     * @return string
+     */
+    public function getOriginalTitle() : string
     {
         return $this->originalTitle;
     }
-
-    public function setOriginalTitle(string $originalTitle): self
+    /**
+     * 
+     *
+     * @param string $originalTitle
+     *
+     * @return self
+     */
+    public function setOriginalTitle(string $originalTitle) : self
     {
         $this->originalTitle = $originalTitle;
-
         return $this;
     }
-
-    public function getOriginalLanguage(): string
+    /**
+     * 
+     *
+     * @return string
+     */
+    public function getOriginalLanguage() : string
     {
         return $this->originalLanguage;
     }
-
-    public function setOriginalLanguage(string $originalLanguage): self
+    /**
+     * 
+     *
+     * @param string $originalLanguage
+     *
+     * @return self
+     */
+    public function setOriginalLanguage(string $originalLanguage) : self
     {
         $this->originalLanguage = $originalLanguage;
-
         return $this;
     }
-
-    public function getTitle(): string
+    /**
+     * 
+     *
+     * @return string
+     */
+    public function getTitle() : string
     {
         return $this->title;
     }
-
-    public function setTitle(string $title): self
+    /**
+     * 
+     *
+     * @param string $title
+     *
+     * @return self
+     */
+    public function setTitle(string $title) : self
     {
         $this->title = $title;
-
         return $this;
     }
-
-    public function getBackdropPath(): ?string
+    /**
+     * 
+     *
+     * @return string|null
+     */
+    public function getBackdropPath() : ?string
     {
         return $this->backdropPath;
     }
-
-    public function setBackdropPath(?string $backdropPath): self
+    /**
+     * 
+     *
+     * @param string|null $backdropPath
+     *
+     * @return self
+     */
+    public function setBackdropPath(?string $backdropPath) : self
     {
         $this->backdropPath = $backdropPath;
-
         return $this;
     }
-
-    public function getPopularity(): float
+    /**
+     * 
+     *
+     * @return float
+     */
+    public function getPopularity() : float
     {
         return $this->popularity;
     }
-
-    public function setPopularity(float $popularity): self
+    /**
+     * 
+     *
+     * @param float $popularity
+     *
+     * @return self
+     */
+    public function setPopularity(float $popularity) : self
     {
         $this->popularity = $popularity;
-
         return $this;
     }
-
-    public function getVoteCount(): int
+    /**
+     * 
+     *
+     * @return int
+     */
+    public function getVoteCount() : int
     {
         return $this->voteCount;
     }
-
-    public function setVoteCount(int $voteCount): self
+    /**
+     * 
+     *
+     * @param int $voteCount
+     *
+     * @return self
+     */
+    public function setVoteCount(int $voteCount) : self
     {
         $this->voteCount = $voteCount;
-
         return $this;
     }
-
-    public function getVideo(): bool
+    /**
+     * 
+     *
+     * @return bool
+     */
+    public function getVideo() : bool
     {
         return $this->video;
     }
-
-    public function setVideo(bool $video): self
+    /**
+     * 
+     *
+     * @param bool $video
+     *
+     * @return self
+     */
+    public function setVideo(bool $video) : self
     {
         $this->video = $video;
-
         return $this;
     }
-
-    public function getVoteAverage(): float
+    /**
+     * 
+     *
+     * @return float
+     */
+    public function getVoteAverage() : float
     {
         return $this->voteAverage;
     }
-
-    public function setVoteAverage(float $voteAverage): self
+    /**
+     * 
+     *
+     * @param float $voteAverage
+     *
+     * @return self
+     */
+    public function setVoteAverage(float $voteAverage) : self
     {
         $this->voteAverage = $voteAverage;
-
         return $this;
     }
 }

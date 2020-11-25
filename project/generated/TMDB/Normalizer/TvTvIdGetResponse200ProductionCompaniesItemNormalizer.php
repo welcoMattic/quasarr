@@ -2,32 +2,29 @@
 
 namespace TMDB\API\Normalizer;
 
-use Jane\JsonSchemaRuntime\Normalizer\CheckArray;
 use Jane\JsonSchemaRuntime\Reference;
+use TMDB\API\Runtime\Normalizer\CheckArray;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
 class TvTvIdGetResponse200ProductionCompaniesItemNormalizer implements DenormalizerInterface, NormalizerInterface, DenormalizerAwareInterface, NormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
     use NormalizerAwareTrait;
     use CheckArray;
-
     public function supportsDenormalization($data, $type, $format = null)
     {
         return $type === 'TMDB\\API\\Model\\TvTvIdGetResponse200ProductionCompaniesItem';
     }
-
     public function supportsNormalization($data, $format = null)
     {
         return is_object($data) && get_class($data) === 'TMDB\\API\\Model\\TvTvIdGetResponse200ProductionCompaniesItem';
     }
-
-    public function denormalize($data, $class, $format = null, array $context = [])
+    public function denormalize($data, $class, $format = null, array $context = array())
     {
         if (isset($data['$ref'])) {
             return new Reference($data['$ref'], $context['document-origin']);
@@ -36,6 +33,9 @@ class TvTvIdGetResponse200ProductionCompaniesItemNormalizer implements Denormali
             return new Reference($data['$recursiveRef'], $context['document-origin']);
         }
         $object = new \TMDB\API\Model\TvTvIdGetResponse200ProductionCompaniesItem();
+        if (null === $data || false === \is_array($data)) {
+            return $object;
+        }
         if (\array_key_exists('id', $data)) {
             $object->setId($data['id']);
         }
@@ -45,13 +45,11 @@ class TvTvIdGetResponse200ProductionCompaniesItemNormalizer implements Denormali
         if (\array_key_exists('origin_country', $data)) {
             $object->setOriginCountry($data['origin_country']);
         }
-
         return $object;
     }
-
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, $format = null, array $context = array())
     {
-        $data = [];
+        $data = array();
         if (null !== $object->getId()) {
             $data['id'] = $object->getId();
         }
@@ -61,7 +59,6 @@ class TvTvIdGetResponse200ProductionCompaniesItemNormalizer implements Denormali
         if (null !== $object->getOriginCountry()) {
             $data['origin_country'] = $object->getOriginCountry();
         }
-
         return $data;
     }
 }
