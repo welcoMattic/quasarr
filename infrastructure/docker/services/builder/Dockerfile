@@ -10,8 +10,8 @@ RUN apk add --no-cache \
     nodejs \
     npm \
     php7-phar \
-    py2-pip \
-    python \
+    py3-pip \
+    python3 \
     yarn
 
 RUN pip install pycodestyle

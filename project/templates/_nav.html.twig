@@ -1,41 +1,34 @@
 {% set active = active|default('search') %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{ path('dashboard') }}">Quasarr</a>
-    <button class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item {{ active == 'search' ? 'active' }}">
-                <a class="nav-link" href="{{ path('dashboard') }}">
-                    Search
-                </a>
-            </li>
-            <li class="nav-item {{ active == 'movies' ? 'active' }}">
-                <a class="nav-link" href="{{ path('list_movies') }}">
-                    Movies
-                </a>
-            </li>
-            <li class="nav-item {{ active == 'tvshows' ? 'active' }}">
-                <a class="nav-link" href="{{ path('list_tvshows') }}">
-                    TV Shows
-                </a>
-            </li>
-            <li class="nav-item {{ active == 'settings' ? 'active' }}">
-                <a class="nav-link" href="{{ path('settings') }}">
-                    Settings
-                </a>
-            </li>
-            <li class="nav-item ml-5">
-                <a class="btn btn-outline-primary" href="#">Language</a>
-            </li>
-        </ul>
+<nav class="bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <img class="h-8 w-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Quasarr">
+{#                    <a href="{{ path('dashboard') }}" class="text-white text-3xl">Quasarr</a>#}
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="{{ path('dashboard') }}"
+                           class="px-3 py-2 rounded-md text-sm font-medium {{ active == 'search' ? 'text-white bg-gray-900' : 'text-gray-300 hover:text-white hover:bg-gray-700' }}">
+                            Dashboard
+                        </a>
+                        <a href="{{ path('list_movies') }}"
+                           class="px-3 py-2 rounded-md text-sm font-medium {{ active == 'movies' ? 'text-white bg-gray-900' : 'text-gray-300 hover:text-white hover:bg-gray-700' }}">
+                            Movies
+                        </a>
+                        <a href="{{ path('list_tvshows') }}"
+                           class="px-3 py-2 rounded-md text-sm font-medium {{ active == 'tvshows' ? 'text-white bg-gray-900' : 'text-gray-300 hover:text-white hover:bg-gray-700' }}">
+                            TV Shows
+                        </a>
+                        <a href="{{ path('settings') }}"
+                           class="px-3 py-2 rounded-md text-sm font-medium {{ active == 'settings' ? 'text-white bg-gray-900' : 'text-gray-300 hover:text-white hover:bg-gray-700' }}">
+                            Settings
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </nav>

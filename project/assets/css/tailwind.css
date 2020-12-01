@@ -1,0 +1,15 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.btn-primary {
+    @apply bg-indigo-500 hover:bg-indigo-400 rounded w-auto text-white text-base px-4 py-1;
+}
+
+.btn-outline-primary {
+    @apply border border-indigo-500 hover:bg-indigo-400 hover:text-gray-200 rounded w-auto text-indigo-500 text-base px-4 py-1;
+}
+
+.backdrop {
+    @apply fixed h-screen w-screen inset-0 bg-gray-800 bg-opacity-60 z-0;
+}

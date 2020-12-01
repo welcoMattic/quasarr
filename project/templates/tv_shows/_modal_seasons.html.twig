@@ -1,37 +1,44 @@
-<div class="modal-header">
-    <h5 class="modal-title">{{ tvShow.name }}</h5>
-    <button type="button"
-            class="js-dialog-close close"
-            data-dismiss="modal"
-            aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-<form action="{{ path('add_tvseason', { tmdbId: tvShow.id }) }}" method="POST">
-    <div class="modal-body">
-        {% for season in tvShow.seasons|filter((season) => season.seasonNumber != 0) %}
-            <div class="custom-control custom-checkbox custom-control-inline">
-                <input type="checkbox"
-                       class="custom-control-input"
-                       id="{{ season.name }}"
-                       value="{{ season.seasonNumber }}"
-                       name="seasons-numbers[]"
-                       {{ season.seasonNumber in existingTvSeasons ? 'checked disabled' }}>
-                <label class="custom-control-label"
-                       for="{{ season.name }}">
-                    Season {{ season.seasonNumber }} ({{ season.episodeCount }} episodes)
-                </label>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="modal-footer">
+{{ encore_entry_link_tags('tailwind') }}
+{% set seasonColumns = (tvShow.seasons|length / 10)|round(0, 'ceil') %}
+<div class="max-w-3xl bg-gray-50 rounded-lg fixed top-10 inset-x-{{ seasonColumns <= 2 ? '1/3' : '60' }} px-8 py-4 flex flex-col z-5">
+    <div class="flex flex-row justify-between items-center">
+        <h5 class="text-xl modal-title">{{ tvShow.name }}</h5>
         <button type="button"
-                class="btn btn-outline-secondary js-dialog-close">
-            Close
-        </button>
-        <button type="submit"
-                class="btn btn-primary">
-            Download
+                class="text-gray-400 text-5xl js-dialog-close close"
+                data-dismiss="modal"
+                aria-label="Close">
+            <span aria-hidden="true">&times;</span>
         </button>
     </div>
-</form>
+    <form action="{{ path('add_tvseason', { tmdbId: tvShow.id }) }}"
+          method="POST"
+          class="flex flex-col justify-between h-full">
+        <div class="grid grid-cols-{{ seasonColumns }} gap-4">
+            {% for i in 1..seasonColumns %}
+                <div>
+                    {% for season in tvShow.seasons|slice(((i - 1) * 10), (i * 10))|filter((season) => season.seasonNumber != 0) %}
+                        <div class="mt-1 flex flex-row items-center">
+                            <input type="checkbox"
+                                   class="rounded text-indigo-500 ring-indigo-300"
+                                   id="{{ season.name }}"
+                                   value="{{ season.seasonNumber }}"
+                                   name="seasons-numbers[]"
+                                    {{ season.seasonNumber in existingTvSeasons ? 'checked disabled' }}>
+                            <label class="ml-2" for="{{ season.name }}">
+                                Season {{ season.seasonNumber }} ({{ season.episodeCount }} episodes)
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="flex flex-row justify-end">
+            <button type="button" class="btn-outline-primary mr-3 js-dialog-close">
+                Close
+            </button>
+            <button type="submit" class="btn-primary">
+                Download
+            </button>
+        </div>
+    </form>
+</div>

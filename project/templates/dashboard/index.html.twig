@@ -3,98 +3,114 @@
 {% block title %}Quasarr - Search{% endblock %}
 
 {% block body %}
-    {{ include('_nav.html.twig', { active: 'search' }) }}
+    <div>
+        {{ include('_nav.html.twig', { active: 'search' }) }}
 
-    <div class="jumbotron jumbotron-fluid pt-5">
-        <div class="container">
-            <h1 class="display-4">Quasarr</h1>
-            <p class="lead">Search your next movie / TV show</p>
-            <form action="{{ path('dashboard') }}" method="POST">
-                <div class="input-group input-group-lg">
-                    <input type="text" class="form-control" name="search" value="{{ search }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary"
-                                type="submit"
-                                id="search-btn">
-                            Search
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="container-xl">
-        {{ include('_flash_messages.html.twig') }}
-        {% if movies is not empty %}
-            <h2 class="mt-5">🎞 {{ search is empty ? 'Popular ' }}Movies</h2>
-            <div class="row row-cols-1 row-cols-md-5 mt-5 mb-5">
-                {% for movie in movies[:5] %}
-                    <div class="col mb-4">
-                        <div class="card">
-                            <img src="https://image.tmdb.org/t/p/w220_and_h330_face{{ movie.posterPath }}"
-                                 class="card-img-top"
-                                 alt="Poster {{ movie.title }}">
-                            <div class="card-body">
-                                <div class="card-text">
-                                    <span class="badge badge-{{ movie.voteAverage > 7 ? 'success' : 'warning' }}">
-                                        {{ movie.voteAverage }} / 10
-                                    </span>
-                                    {% if movie.id in existingMovies %}
-                                        <a href="#" class="btn btn-outline-secondary btn-sm float-right disabled">
-                                            Added
-                                        </a>
-                                    {% else %}
-                                        <a href="{{ path('add_movie', { tmdbId: movie.id }) }}"
-                                           class="btn btn-outline-success btn-sm float-right">
-                                            Add
-                                        </a>
-                                    {% endif %}
-                                </div>
-                                <h5 class="card-title mt-4">{{ movie.title }}</h5>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold leading-tight text-gray-900">
+                    Quasarr
+                </h1>
             </div>
-        {% endif %}
-
-        {% if tvShows is not empty %}
-            <h2>📺 {{ search is empty ? 'Popular ' }}Tv Shows</h2>
-            <div class="row row-cols-1 row-cols-md-5 mt-5">
-                {% for tvShow in tvShows[:5] %}
-                    <div class="col mb-4">
-                        <div class="card">
-                            <img src="https://image.tmdb.org/t/p/w220_and_h330_face{{ tvShow.posterPath }}"
-                                 class="card-img-top"
-                                 alt="Poster {{ tvShow.name }}">
-                            <div class="card-body">
-                                <div class="card-text">
-                                    <span class="badge badge-{{ tvShow.voteAverage > 7 ? 'success' : 'warning' }}">
-                                        {{ tvShow.voteAverage }} / 10
-                                    </span>
-                                    <button type="button"
-                                            class="btn btn-outline-success btn-sm float-right js-dialog-open"
-                                            data-url="{{ path('get_tvshow_seasons', { tmdbId: tvShow.id }) }}">
-                                        Manage
+        </header>
+        <main>
+            <div class="max-w-8xl mx-auto py-6 sm:px-6 lg:px-8">
+                <div class="py-12 bg-white">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="lg:text-center">
+                            <form action="{{ path('dashboard') }}" method="POST">
+                                <div class="flex">
+                                    <input class="focus:border-indigo-500 focus:ring-1 focus:ring-inset focus:ring-indigo-500 text-xl flex-grow text-black placeholder-gray-300 border border-indigo-200 rounded-l py-2"
+                                           type="text"
+                                           name="search"
+                                           aria-label="Search a movie, or a TV Show"
+                                           value="{{ search }}"
+                                           placeholder="Ex: Star Wars" />
+                                    <button type="submit" class="bg-indigo-500 hover:bg-indigo-400 rounded-r flex-none w-auto text-white text-xl px-12 py-2">
+                                        Search
                                     </button>
                                 </div>
-                                <h5 class="card-title mt-4">{{ tvShow.name }}</h5>
-                            </div>
+                            </form>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="modal c-dialog js-dialog"
-                 id="tvshow-seasons-modal"
-                 tabindex="-1"
-                 role="dialog"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
+
+                        <div class="mt-20">
+                            {% if movies is not empty %}
+                                <h2 class="text-3xl">🎞 {{ search is empty ? 'Popular ' }}Movies</h2>
+                                <div class="grid grid-cols-5 gap-4 mt-10">
+                                    {% for movie in movies[:5] %}
+                                        <div class="flex flex-col mt-5 px-1">
+                                            <img src="{%- if movie.posterPath -%}
+                                                          https://image.tmdb.org/t/p/w220_and_h330_face{{ movie.posterPath }}
+                                                      {%- else -%}
+                                                          {{ asset('images/film-poster-placeholder.png') }}
+                                                      {%- endif -%}"
+                                                 class="rounded-2xl hover:ring-4 hover:ring-indigo-200 hover:transform hover:scale-105 transition-all duration-200 ease-in-out"
+                                                 alt="Poster {{ movie.title }}">
+                                            <div class="mt-4 flex flex-row justify-between items-center">
+                                                <div class="px-2 text-xs leading-5 font-semibold rounded-full {{ movie.voteAverage > 7 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }} ">
+                                                    {{ movie.voteAverage }} / 10
+                                                </div>
+                                                {% if movie.id in existingMovies %}
+                                                    <span class="bg-green-500 rounded w-auto text-white text-base px-6 py-1">
+                                                        Added
+                                                    </span>
+                                                {% else %}
+                                                    <a href="{{ path('add_movie', { tmdbId: movie.id }) }}"
+                                                       class="btn-primary">
+                                                        Add
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                            <h5 class="text-xl">{{ movie.title }}</h5>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="mt-20">
+                            {% if tvShows is not empty %}
+                                <h2 class="text-3xl">📺 {{ search is empty ? 'Popular ' }}Tv Shows</h2>
+                                <div class="grid grid-cols-5 gap-4 mt-10">
+                                    {% for tvShow in tvShows[:5] %}
+                                        <div class="flex flex-col mt-5 px-1">
+                                            <img src="{%- if tvShow.posterPath is not null -%}
+                                                          https://image.tmdb.org/t/p/w220_and_h330_face{{ tvShow.posterPath }}
+                                                      {%- else -%}
+                                                          {{ asset('build/images/film-poster-placeholder.png') }}
+                                                      {%- endif -%}"
+                                                 class="rounded-2xl hover:ring-4 hover:ring-indigo-200 hover:transform hover:scale-105 transition-all duration-200 ease-in-out"
+                                                 alt="Poster {{ tvShow.name }}">
+                                            <h5 class="mt-4 text-xl">{{ tvShow.name }}</h5>
+                                            <div class=" mt-2 flex flex-row justify-between items-center">
+                                                <div class="px-2 text-xs leading-5 font-semibold rounded-full {{ tvShow.voteAverage > 7 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }} ">
+                                                    {{ tvShow.voteAverage }} / 10
+                                                </div>
+                                                <button type="button"
+                                                        class="btn-primary js-dialog-open"
+                                                        data-url="{{ path('get_tvshow_seasons', { tmdbId: tvShow.id }) }}">
+                                                    Manage
+                                                </button>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="fixed c-dialog js-dialog"
+                                     id="tvshow-seasons-modal"
+                                     tabindex="-1"
+                                     role="dialog"
+                                     aria-hidden="true">
+                                    <div class="modal-content"></div>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
-        {% endif %}
+        </main>
+
+
+        <div class="container-xl">
+            {{ include('_flash_messages.html.twig') }}
+        </div>
     </div>
 {% endblock %}
